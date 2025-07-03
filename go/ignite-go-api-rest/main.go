@@ -12,6 +12,30 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+type Response struct {
+	Error string `json:"error,omitempty"` // Se o erro estiver vazio, ele não vai estar presente na resposta
+	Data  any    `json:"data,omitempty"`
+}
+
+func sendJSON(w http.ResponseWriter, resp Response, status int) {
+	data, err := json.Marshal(resp)
+
+	if err != nil {
+		fmt.Println("Erro ao fazer marshal do JSON:", err)
+		sendJSON(
+			w,
+			Response{Error: "Something went wrong"},
+			http.StatusInternalServerError,
+		)
+	}
+
+	w.WriteHeader(status)
+	if _, err := w.Write(data); err != nil {
+		fmt.Println("Erro ao escrever resposta:", err)
+		return
+	}
+}
+
 type User struct {
 	Username string
 	ID       int64 `json:"id,string"` // Id em GO é um int64, mas no JSON será uma string
@@ -72,19 +96,11 @@ func handleGetUsers(db map[int64]User) http.HandlerFunc {
 		// Estamos escrevendo e lendo para mesma variavel, causando uma race condition, pois o mapa é um ponteiro para um mapa
 		user, ok := db[id]
 		if !ok {
-			// http.Error(w, "User not found", http.StatusNotFound) // Returns plain/text not a JSON
-			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte(`{"error": "User not found"}`)) // Returning a JSON error message
+			sendJSON(w, Response{Error: "User not found"}, http.StatusNotFound)
 			return
 		}
 
-		data, err := json.Marshal(user)
-		if err != nil {
-			http.Error(w, "Something went wrong", http.StatusInternalServerError)
-			return
-		}
-
-		w.Write(data)
+		sendJSON(w, Response{Data: user}, http.StatusOK)
 	}
 }
 
@@ -96,18 +112,30 @@ func handlePostUsers(db map[int64]User) http.HandlerFunc {
 		if err != nil {
 			var maxErr *http.MaxBytesError
 			if errors.As(err, &maxErr) {
-				http.Error(w, "Request body too large", http.StatusRequestEntityTooLarge)
+				sendJSON(
+					w,
+					Response{Error: "Request body too large"},
+					http.StatusRequestEntityTooLarge,
+				)
 				return
 			}
 
 			fmt.Println(err)
-			http.Error(w, "Something went wrong", http.StatusInternalServerError)
+			sendJSON(
+				w,
+				Response{Error: "Something went wrong"},
+				http.StatusInternalServerError,
+			)
 			return
 		}
 
 		var user User
 		if err := json.Unmarshal(data, &user); err != nil {
-			http.Error(w, "Invalid body", http.StatusUnprocessableEntity)
+			sendJSON(
+				w,
+				Response{Error: "Invalid body"},
+				http.StatusUnprocessableEntity,
+			)
 		}
 
 		// this line is a bug, not works as expected
