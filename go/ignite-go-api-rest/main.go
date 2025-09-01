@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
+	"os"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -19,9 +22,8 @@ type Response struct {
 
 func sendJSON(w http.ResponseWriter, resp Response, status int) {
 	data, err := json.Marshal(resp)
-
 	if err != nil {
-		fmt.Println("Erro ao fazer marshal do JSON:", err)
+		slog.Error("Erro ao fazer marshal do JSON", "error", err)
 		sendJSON(
 			w,
 			Response{Error: "Something went wrong"},
@@ -31,7 +33,7 @@ func sendJSON(w http.ResponseWriter, resp Response, status int) {
 
 	w.WriteHeader(status)
 	if _, err := w.Write(data); err != nil {
-		fmt.Println("Erro ao escrever resposta:", err)
+		slog.Error("Erro ao escrever resposta", "error", err)
 		return
 	}
 }
@@ -40,10 +42,48 @@ type User struct {
 	Username string
 	ID       int64 `json:"id,string"` // Id em GO é um int64, mas no JSON será uma string
 	Role     string
-	Password string `json:"-"` // Ignorando o campo Password no JSON
+	Password Password `json:"-"` // Ignorando o campo Password no JSON
 }
 
+type Password string
+
+func (p Password) LogValue() slog.Value {
+	return slog.StringValue("[REDACTED]") // Redact the password in logs
+}
+
+// const levelFoo = slog.Level(-50)
+
 func main() {
+	p := Password("123456") // INFO password p=[REDACTED]
+	slog.Info("password", "p", p)
+
+	opts := &slog.HandlerOptions{
+		AddSource: true,
+		Level:     slog.LevelDebug,
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if a.Key == "level" {
+				level := a.Value.String()
+				if level == "DEBUG-46" { // Reference to levelFoo
+					a.Value = slog.StringValue("FOO")
+				}
+			}
+
+			return a
+		},
+	}
+	l := slog.New(slog.NewJSONHandler(os.Stdout, opts))
+	slog.SetDefault(l)
+	slog.Info("Serviço sendo iniciado", "version", "1.0.0")
+	l = slog.With(slog.Group("app_info", slog.String("version", "1.0.0")))
+	l.LogAttrs(context.Background(), slog.LevelInfo, "Tivemos um HTTP Request",
+		slog.Group(
+			"http_data",
+			slog.String("method", http.MethodDelete),
+			slog.Int("status_code", http.StatusOK),
+		),
+		slog.Duration("time_taken", time.Second),
+		slog.String("user_agent", "dsadasda"),
+	)
 	r := chi.NewMux()
 
 	r.Use(middleware.Recoverer)
@@ -108,7 +148,6 @@ func handlePostUsers(db map[int64]User) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, 10000) // Limiting the request body to 10MB
 		data, err := io.ReadAll(r.Body)
-
 		if err != nil {
 			var maxErr *http.MaxBytesError
 			if errors.As(err, &maxErr) {
@@ -120,7 +159,7 @@ func handlePostUsers(db map[int64]User) http.HandlerFunc {
 				return
 			}
 
-			fmt.Println(err)
+			slog.Error("Falha ao ler o JSON do usuário", "error", err)
 			sendJSON(
 				w,
 				Response{Error: "Something went wrong"},
