@@ -1,13 +1,14 @@
 package main
 
 import (
-	"ignite-go-api-rest/project-one/api"
+	"ignite-go-api-rest/project-two/api"
 	"log/slog"
 	"net/http"
+	"os"
 	"time"
 )
 
-func mainProjectOne() {
+func main() {
 	if err := run(); err != nil {
 		slog.Error("Failed to execute code", "error", err)
 		return
@@ -15,10 +16,9 @@ func mainProjectOne() {
 	slog.Info("All systems offline")
 }
 
-func runProjectOne() error {
-	db := make(map[string]string)
-
-	handler := api.NewHandler(db)
+func run() error {
+	apiKey := os.Getenv("OMDB_API_KEY")
+	handler := api.NewHandler(apiKey)
 
 	s := http.Server{
 		ReadTimeout:  10 * time.Second,
