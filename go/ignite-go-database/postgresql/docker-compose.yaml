@@ -1,0 +1,16 @@
+services:
+  db:
+    image: bitnami/postgresql:latest
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_DATABASE=ignite-go
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRESQL_POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/bitnami/postgresql
+
+volumes:
+  db:
+    driver: local
