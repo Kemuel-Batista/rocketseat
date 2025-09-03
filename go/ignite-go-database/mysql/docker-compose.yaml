@@ -1,0 +1,14 @@
+services:
+  db:
+    image: bitnami/mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=ignite-go
+    ports:
+      - 3306:3306
+    volumes:
+      - db:/bitnami/mysql/data
+
+volumes:
+  db:
+    driver: local
