@@ -4,11 +4,11 @@ import { View } from 'react-native'
 import { ButtonIcon } from '@/components/button-icon'
 import { Header } from '@/components/header'
 import { Title } from '@/components/title'
-import type { StackRoutesProps } from '@/routes/stack-routes'
+import type { DrawerRoutesProps } from '@/routes/drawer-routes'
 
-type RouteParams = StackRoutesProps<'product'>
+type RouteParams = DrawerRoutesProps<'product'>
 
-export function Product({ navigation, route }: StackRoutesProps<'product'>) {
+export function Product({ navigation, route }: DrawerRoutesProps<'product'>) {
   // const navigation = useNavigation()
   const { params } = useRoute<RouteParams['route']>()
 
