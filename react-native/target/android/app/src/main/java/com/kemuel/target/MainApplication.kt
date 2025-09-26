@@ -1,4 +1,4 @@
-package com.target
+package com.kemuel.target
 
 import android.app.Application
 import android.content.res.Configuration

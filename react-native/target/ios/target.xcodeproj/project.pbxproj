@@ -259,12 +259,14 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.target;
-				PRODUCT_NAME = target;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kemuel.target";
+				PRODUCT_NAME = "target";
 				SWIFT_OBJC_BRIDGING_HEADER = "target/target-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				TARGETED_DEVICE_FAMILY = "1";
+				CODE_SIGN_ENTITLEMENTS = target/target.entitlements;
 			};
 			name = Debug;
 		};
@@ -286,11 +288,13 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.target;
-				PRODUCT_NAME = target;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kemuel.target";
+				PRODUCT_NAME = "target";
 				SWIFT_OBJC_BRIDGING_HEADER = "target/target-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				TARGETED_DEVICE_FAMILY = "1";
+				CODE_SIGN_ENTITLEMENTS = target/target.entitlements;
 			};
 			name = Release;
 		};

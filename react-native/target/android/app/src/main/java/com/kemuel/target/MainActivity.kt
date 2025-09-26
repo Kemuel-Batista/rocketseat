@@ -1,4 +1,4 @@
-package com.target
+package com.kemuel.target
 
 import android.os.Build
 import android.os.Bundle
