@@ -1,7 +1,7 @@
-import { router } from 'expo-router'
 import { View } from 'react-native'
 
 import { Button } from '@/components/button'
+import { CurrencyInput } from '@/components/currency-input'
 import { Input } from '@/components/input'
 import { PageHeader } from '@/components/page-header'
 
@@ -18,9 +18,11 @@ export default function Target() {
           label="Nome da marca"
           placeholder="Ex: Viagem para praia, Apple Watch"
         />
-      </View>
 
-      <Button title="Salvar" onPress={() => router.back()} />
+        <CurrencyInput label="Valor alvo" value={0} />
+
+        <Button title="Salvar" />
+      </View>
     </View>
   )
 }
