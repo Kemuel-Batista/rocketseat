@@ -4,10 +4,13 @@ import { Text, View } from 'react-native'
 import { colors } from '@/theme'
 
 import { Separator } from '../separator'
+import { Summary, SummaryProps } from '../summary'
 import { styles } from './styles'
 
 export type HomeHeaderProps = {
   total: string
+  input: SummaryProps
+  output: SummaryProps
 }
 
 type Props = {
@@ -26,6 +29,19 @@ export function HomeHeader({ data }: Props) {
       </View>
 
       <Separator color={colors.blue[400]} />
+
+      <View style={styles.summary}>
+        <Summary
+          data={data.input}
+          icon={{ name: 'arrow-upward', color: colors.green[500] }}
+        />
+
+        <Summary
+          data={data.output}
+          icon={{ name: 'arrow-downward', color: colors.red[400] }}
+          isLeft
+        />
+      </View>
     </LinearGradient>
   )
 }
