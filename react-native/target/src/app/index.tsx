@@ -1,5 +1,5 @@
 import { router } from 'expo-router'
-import { View } from 'react-native'
+import { StatusBar, View } from 'react-native'
 
 import { Button } from '@/components/button'
 import { HomeHeader } from '@/components/home-header'
@@ -39,6 +39,7 @@ const targets = [
 export default function Index() {
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar barStyle="light-content" />
       <HomeHeader data={summary} />
 
       <List
