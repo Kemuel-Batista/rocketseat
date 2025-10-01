@@ -46,7 +46,24 @@ export function useTargetDatabase() {
     `)
   }
 
+  async function show(id: number) {
+    return await database.getFirstAsync<TargetResponse>(`
+      SELECT
+        ts.id,
+        ts.name,
+        ts.amount,
+        COALESCE(SUM(tv.amount), 0) AS current,
+        COALESCE((SUM(tv.amount) / ts.amount) * 100, 0) AS percentage,
+        ts.created_at,
+        ts.updated_at
+      FROM targets ts
+      LEFT JOIN transactions tv ON tv.target_id = ts.id
+      WHERE ts.id = ${id}
+    `)
+  }
+
   return {
+    show,
     create,
     listBySavedValue,
   }

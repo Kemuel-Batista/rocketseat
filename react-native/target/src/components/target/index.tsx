@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 
 import type { TargetResponse } from '@/database/use-target-database'
+import { numberToCurrency } from '@/utils/number-to-currency'
 
 import { styles } from './styles'
 
@@ -23,7 +24,8 @@ export function Target({ data, ...rest }: Props) {
         </Text>
 
         <Text style={styles.status}>
-          {data.percentage} • {data.current} de {data.name}
+          {data.percentage}% • {numberToCurrency(data.current)} de{' '}
+          {numberToCurrency(data.amount)}
         </Text>
       </View>
 
