@@ -1,10 +1,16 @@
-import { router } from 'expo-router'
-import { StatusBar, View } from 'react-native'
+import { router, useFocusEffect } from 'expo-router'
+import { useCallback, useState } from 'react'
+import { Alert, StatusBar, View } from 'react-native'
 
 import { Button } from '@/components/button'
 import { HomeHeader } from '@/components/home-header'
 import { List } from '@/components/list'
+import { Loading } from '@/components/loading'
 import { Target } from '@/components/target'
+import {
+  type TargetResponse,
+  useTargetDatabase,
+} from '@/database/use-target-database'
 
 const summary = {
   total: 'R$ 2,680,00',
@@ -12,31 +18,39 @@ const summary = {
   output: { label: 'Saídas', value: '-R$ 883.65' },
 }
 
-const targets = [
-  {
-    id: '1',
-    name: 'Comprar Teclado Logitech',
-    percentage: '0%',
-    current: 'R$ 0,00',
-    target: 'R$ 1.000,00',
-  },
-  {
-    id: '2',
-    name: 'Comprar Mouse Logitech',
-    percentage: '75%',
-    current: 'R$ 900,00',
-    target: 'R$ 1.000,00',
-  },
-  {
-    id: '3',
-    name: 'Fazer uma viagem para o Rio de Janeiro',
-    percentage: '75%',
-    current: 'R$ 1.200,00',
-    target: 'R$ 3.000,00',
-  },
-]
-
 export default function Index() {
+  const [isFetching, setIsFetching] = useState(true)
+  const [targets, setTargets] = useState<TargetResponse[]>([])
+  const targetDatabase = useTargetDatabase()
+
+  async function fetchTargets(): Promise<TargetResponse[]> {
+    try {
+      return await targetDatabase.listBySavedValue()
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível carregar as metas.')
+      console.log(error)
+    }
+  }
+
+  async function fetchData() {
+    const targetDataPromise = fetchTargets()
+
+    const [response] = await Promise.all([targetDataPromise])
+
+    setTargets(response)
+    setIsFetching(false)
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData()
+    }, []),
+  )
+
+  if (isFetching) {
+    return <Loading />
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
@@ -45,7 +59,7 @@ export default function Index() {
       <List
         title="Metas"
         data={targets}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => (
           <Target
             data={item}

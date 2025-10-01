@@ -6,18 +6,12 @@ import {
   View,
 } from 'react-native'
 
+import type { TargetResponse } from '@/database/use-target-database'
+
 import { styles } from './styles'
 
-export type TargetProps = {
-  id?: string
-  name: string
-  percentage: string
-  current: string
-  target: string
-}
-
 type Props = TouchableOpacityProps & {
-  data: TargetProps
+  data: TargetResponse
 }
 
 export function Target({ data, ...rest }: Props) {
@@ -29,7 +23,7 @@ export function Target({ data, ...rest }: Props) {
         </Text>
 
         <Text style={styles.status}>
-          {data.percentage} • {data.current} de {data.target}
+          {data.percentage} • {data.current} de {data.name}
         </Text>
       </View>
 
