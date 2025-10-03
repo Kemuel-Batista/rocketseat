@@ -24,7 +24,7 @@ export function Target({ data, ...rest }: Props) {
         </Text>
 
         <Text style={styles.status}>
-          {data.percentage}% • {numberToCurrency(data.current)} de{' '}
+          {data.percentage.toFixed(0)}% • {numberToCurrency(data.current)} de{' '}
           {numberToCurrency(data.amount)}
         </Text>
       </View>

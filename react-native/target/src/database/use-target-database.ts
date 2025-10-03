@@ -40,7 +40,7 @@ export function useTargetDatabase() {
         ts.name,
         ts.amount,
         COALESCE(SUM(tv.amount), 0) AS current,
-        COALESCE((SUM(tv.amount) / ts.amount) * 100, 0) AS percentage,
+        COALESCE ((SUM(tv.amount) / ts.amount) * 100, 0) AS percentage,
         ts.created_at,
         ts.updated_at
       FROM targets ts
@@ -57,7 +57,7 @@ export function useTargetDatabase() {
         ts.name,
         ts.amount,
         COALESCE(SUM(tv.amount), 0) AS current,
-        COALESCE((SUM(tv.amount) / ts.amount) * 100, 0) AS percentage,
+        COALESCE ((SUM(tv.amount) / ts.amount) * 100, 0) AS percentage,
         ts.created_at,
         ts.updated_at
       FROM targets ts
