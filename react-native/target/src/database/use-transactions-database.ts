@@ -32,6 +32,10 @@ export function useTransactionsDatabase() {
     })
   }
 
+  async function remove(id: number) {
+    await database.runAsync('DELETE FROM transactions WHERE id = ?', id)
+  }
+
   function listByTargetId(id: number): Promise<TransactionResponse[]> {
     return database.getAllAsync(`
       SELECT * FROM transactions
@@ -42,6 +46,7 @@ export function useTransactionsDatabase() {
 
   return {
     create,
+    remove,
     listByTargetId,
   }
 }
