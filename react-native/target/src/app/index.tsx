@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 import { Alert, StatusBar, View } from 'react-native'
 
 import { Button } from '@/components/button'
-import { HomeHeader } from '@/components/home-header'
+import { HomeHeader, type HomeHeaderProps } from '@/components/home-header'
 import { List } from '@/components/list'
 import { Loading } from '@/components/loading'
 import { Target } from '@/components/target'
@@ -11,17 +11,16 @@ import {
   type TargetResponse,
   useTargetDatabase,
 } from '@/database/use-target-database'
-
-const summary = {
-  total: 'R$ 2,680,00',
-  input: { label: 'Entradas', value: 'R$ 6,184.90' },
-  output: { label: 'Saídas', value: '-R$ 883.65' },
-}
+import { useTransactionsDatabase } from '@/database/use-transactions-database'
+import { numberToCurrency } from '@/utils/number-to-currency'
 
 export default function Index() {
   const [isFetching, setIsFetching] = useState(true)
+  const [summary, setSummary] = useState<HomeHeaderProps>()
   const [targets, setTargets] = useState<TargetResponse[]>([])
+
   const targetDatabase = useTargetDatabase()
+  const transactionsDatabase = useTransactionsDatabase()
 
   async function fetchTargets(): Promise<TargetResponse[]> {
     try {
@@ -32,12 +31,39 @@ export default function Index() {
     }
   }
 
+  async function fetchSummary(): Promise<HomeHeaderProps> {
+    try {
+      const response = await transactionsDatabase.summary()
+
+      return {
+        total: numberToCurrency(response.input + response.output),
+        input: {
+          label: 'Entradas',
+          value: numberToCurrency(response.input),
+        },
+        output: {
+          label: 'Saídas',
+          value: numberToCurrency(response.output),
+        },
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível carregar o resumo.')
+      console.log(error)
+    }
+  }
+
   async function fetchData() {
     const targetDataPromise = fetchTargets()
+    const dataSummaryPromise = fetchSummary()
 
-    const [response] = await Promise.all([targetDataPromise])
+    const [targetData, dataSummary] = await Promise.all([
+      targetDataPromise,
+      dataSummaryPromise,
+    ])
 
-    setTargets(response)
+    setTargets(targetData)
+    setSummary(dataSummary)
+
     setIsFetching(false)
   }
 

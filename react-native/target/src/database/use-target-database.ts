@@ -33,20 +33,20 @@ export function useTargetDatabase() {
     })
   }
 
-  async function listBySavedValue() {
-    return await database.getAllAsync<TargetResponse>(`
+  function listByClosestTarget() {
+    return database.getAllAsync<TargetResponse>(`
       SELECT
-        ts.id,
-        ts.name,
-        ts.amount,
-        COALESCE(SUM(tv.amount), 0) AS current,
-        COALESCE ((SUM(tv.amount) / ts.amount) * 100, 0) AS percentage,
-        ts.created_at,
-        ts.updated_at
-      FROM targets ts
-      LEFT JOIN transactions tv ON tv.target_id = ts.id
-      GROUP BY ts.id, ts.name, ts.amount
-      ORDER by current DESC;
+        targets.id,
+        targets.name,
+        targets.amount,
+        COALESCE (SUM(transactions.amount), 0) AS current,
+        COALESCE ((SUM(transactions.amount) / targets.amount) * 100, 0) AS percentage,
+        targets.created_at,
+        targets.updated_at
+      FROM targets
+      LEFT JOIN transactions ON targets.id = transactions.target_id
+      GROUP BY targets.id, targets.name, targets.amount
+      ORDER BY percentage DESC
     `)
   }
 
@@ -93,6 +93,6 @@ export function useTargetDatabase() {
     create,
     update,
     remove,
-    listBySavedValue,
+    listBySavedValue: listByClosestTarget,
   }
 }
