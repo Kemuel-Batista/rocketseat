@@ -86,6 +86,42 @@ export default function Target() {
     }
   }
 
+  async function handleRemove() {
+    if (!params.id) {
+      return
+    }
+
+    Alert.alert('Atenção', 'Deseja realmente remover a meta?', [
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+      {
+        text: 'Sim',
+      },
+    ])
+
+    remove()
+  }
+
+  async function remove() {
+    try {
+      setIsProcessing(true)
+
+      await targetDatabase.remove(Number(params.id))
+
+      Alert.alert('Meta', 'Meta removida com sucesso!', [
+        {
+          text: 'OK',
+          onPress: () => router.replace('/'),
+        },
+      ])
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível remover a meta.')
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     if (params.id) {
       fetchDetails(Number(params.id))
@@ -97,6 +133,11 @@ export default function Target() {
       <PageHeader
         title="Meta"
         subtitle="Economize para alcançar sua meta financeira"
+        rightButton={
+          params.id
+            ? { icon: 'delete', onPress: () => handleRemove }
+            : undefined
+        }
       />
 
       <View style={{ marginTop: 32, gap: 24 }}>

@@ -78,10 +78,21 @@ export function useTargetDatabase() {
     })
   }
 
+  async function remove(id: number) {
+    const statement = await database.prepareAsync(
+      'DELETE FROM targets WHERE id = $id;',
+    )
+
+    await statement.executeAsync({
+      $id: id,
+    })
+  }
+
   return {
     show,
     create,
     update,
+    remove,
     listBySavedValue,
   }
 }
