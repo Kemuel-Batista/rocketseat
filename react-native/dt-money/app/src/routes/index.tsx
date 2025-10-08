@@ -1,26 +1,25 @@
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { useCallback, useState } from 'react'
 
-import { Login } from '@/screens/login'
-import { Register } from '@/screens/register'
-
-export type PublicStackParamsList = {
-  login: undefined
-  register: undefined
-}
-
-const PublicStack = createStackNavigator<PublicStackParamsList>()
+import { PrivateRoutes } from './private-routes'
+import { PublicRoutes } from './public-routes'
 
 export function NavigationRoutes() {
+  const [user, setUser] = useState({
+    name: '',
+  })
+
+  const Routes = useCallback(() => {
+    if (!user) {
+      return <PublicRoutes />
+    } else {
+      return <PrivateRoutes />
+    }
+  }, [user])
+
   return (
     <NavigationContainer>
-      <PublicStack.Navigator
-        id={undefined}
-        screenOptions={{ headerShown: false }}
-      >
-        <PublicStack.Screen name="login" component={Login} />
-        <PublicStack.Screen name="register" component={Register} />
-      </PublicStack.Navigator>
+      <Routes />
     </NavigationContainer>
   )
 }
