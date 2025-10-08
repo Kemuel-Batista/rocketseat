@@ -4,8 +4,8 @@ import { Login } from '@/screens/login'
 import { Register } from '@/screens/register'
 
 export type PublicStackParamsList = {
-  Login: undefined
-  Register: undefined
+  login: undefined
+  register: undefined
 }
 
 export function PublicRoutes() {
@@ -13,8 +13,8 @@ export function PublicRoutes() {
 
   return (
     <PublicStack.Navigator screenOptions={{ headerShown: false }}>
-      <PublicStack.Screen name="Login" component={Login} />
-      <PublicStack.Screen name="Register" component={Register} />
+      <PublicStack.Screen name="login" component={Login} />
+      <PublicStack.Screen name="register" component={Register} />
     </PublicStack.Navigator>
   )
 }
