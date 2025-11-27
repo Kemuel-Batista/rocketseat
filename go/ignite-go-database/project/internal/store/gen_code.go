@@ -1,4 +1,4 @@
-package api
+package store
 
 import "math/rand/v2"
 

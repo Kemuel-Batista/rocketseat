@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 	"project/internal/api"
+	"project/internal/store"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -24,7 +25,9 @@ func run() error {
 		DB:       0,
 	})
 
-	handler := api.NewHandler(rdb)
+	store := store.NewStore(rdb)
+
+	handler := api.NewHandler(store)
 
 	s := http.Server{
 		ReadTimeout:  10 * time.Second,

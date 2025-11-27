@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"net/url"
+	"project/internal/store"
 )
 
 type shortenURLRequest struct {
@@ -14,7 +16,7 @@ type shortenURLResponse struct {
 	Code string `json:"code"`
 }
 
-func handleShortenURL(db map[string]string) http.HandlerFunc {
+func handleShortenURL(store store.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var body shortenURLRequest
 
@@ -28,8 +30,13 @@ func handleShortenURL(db map[string]string) http.HandlerFunc {
 			return
 		}
 
-		code := genCode()
-		db[code] = body.URL
+		code, err := store.SaveShortenedURL(r.Context(), body.URL)
+		if err != nil {
+			slog.Error("failed to create code", "error", err)
+			sendJSON(w, apiResponse{Error: "Something went wrong"}, http.StatusInternalServerError)
+			return
+		}
+
 		sendJSON(w, apiResponse{Data: shortenURLResponse{Code: code}}, http.StatusCreated)
 	}
 }
