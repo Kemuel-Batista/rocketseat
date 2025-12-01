@@ -7,8 +7,8 @@ sql:
     gen:
       go:
         emit_json_tags: true
-        out: "."
-        package: "pg-store"
+        out: "./structs"
+        package: "pgstore"
         sql_package: "pgx/v5"
         overrides:
           - db_type: "uuid"
