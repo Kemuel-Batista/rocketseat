@@ -2,18 +2,25 @@ package main
 
 import (
 	"context"
+	"encoding/gob"
 	"fmt"
 	"gobid/internal/api"
 	"gobid/internal/services"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/alexedwards/scs/pgxstore"
+	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
 
 func main() {
+	gob.Register(uuid.UUID{})
+
 	if err := godotenv.Load(); err != nil {
 		panic(err)
 	}
@@ -36,10 +43,17 @@ func main() {
 	if err := pool.Ping(ctx); err != nil {
 		panic(err)
 	}
+	s := scs.New()
+	s.Store = pgxstore.New(pool)
+	s.Lifetime = 24 * time.Hour // Session will last for 24 hours
+	s.Cookie.HttpOnly = true
+	s.Cookie.SameSite = http.SameSiteLaxMode
+	s.Cookie.Secure = false // Set to true if using HTTPS
 
 	api := api.Api{
 		Router:      chi.NewMux(),
 		UserService: services.NewUserService(pool),
+		Sessions:    s,
 	}
 
 	api.BindRoutes()
