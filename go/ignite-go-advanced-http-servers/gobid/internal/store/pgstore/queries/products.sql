@@ -21,6 +21,6 @@ SELECT
 FROM products
 WHERE is_sold = FALSE;
 
--- name: FindProductByID :one
+-- name: FindProductById :one
 SELECT * FROM products
 WHERE id = $1;

@@ -98,13 +98,13 @@ func (q *Queries) FindManyProducts(ctx context.Context) ([]FindManyProductsRow, 
 	return items, nil
 }
 
-const findProductByID = `-- name: FindProductByID :one
+const findProductById = `-- name: FindProductById :one
 SELECT id, seller_id, product_name, description, baseprice, auction_end, is_sold, created_at, updated_at FROM products
 WHERE id = $1
 `
 
-func (q *Queries) FindProductByID(ctx context.Context, id uuid.UUID) (Product, error) {
-	row := q.db.QueryRow(ctx, findProductByID, id)
+func (q *Queries) FindProductById(ctx context.Context, id uuid.UUID) (Product, error) {
+	row := q.db.QueryRow(ctx, findProductById, id)
 	var i Product
 	err := row.Scan(
 		&i.ID,

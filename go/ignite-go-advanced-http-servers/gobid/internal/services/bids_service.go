@@ -11,7 +11,6 @@ import (
 )
 
 var (
-	ErrProductNotFound = errors.New("product not found")
 	ErrBidAmountTooLow = errors.New("bid amount is too low")
 )
 
@@ -32,7 +31,7 @@ func (bs *BidsService) PlaceBid(
 	product_id, bidder_id uuid.UUID,
 	amount float64,
 ) (pgstore.Bid, error) {
-	product, err := bs.queries.FindProductByID(ctx, product_id)
+	product, err := bs.queries.FindProductById(ctx, product_id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return pgstore.Bid{}, ErrProductNotFound
