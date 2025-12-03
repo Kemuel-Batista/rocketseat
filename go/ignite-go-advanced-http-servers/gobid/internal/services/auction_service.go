@@ -73,6 +73,7 @@ func (r *AuctionRoom) broadcastMessage(m Message) {
 					client.Send <- Message{
 						Message: ErrBidAmountTooLow.Error(),
 						Kind:    FailedToPlaceBid,
+						UserId:  m.UserId,
 					}
 				}
 				return
@@ -83,6 +84,7 @@ func (r *AuctionRoom) broadcastMessage(m Message) {
 			client.Send <- Message{
 				Message: "Your bid has been placed successfully",
 				Kind:    SuccessfullyPlacedBid,
+				UserId:  m.UserId,
 			}
 		}
 
@@ -90,6 +92,7 @@ func (r *AuctionRoom) broadcastMessage(m Message) {
 			newBidMessage := Message{
 				Kind:    NewBidPlaced,
 				Message: "A new bid was placed", Amount: bid.Amount,
+				UserId: m.UserId,
 			}
 			if id == m.UserId {
 				continue
@@ -167,6 +170,8 @@ func NewClient(room *AuctionRoom, conn *websocket.Conn, userId uuid.UUID) *Clien
 const (
 	MAX_MESSAGE_SIZE = 512
 	READ_DEADLINE    = 60 * time.Second
+	WRITE_WAIT       = 10 * time.Second
+	PING_PERIOD      = (READ_DEADLINE * 9) / 10
 )
 
 func (c *Client) ReadEventLoop() {
@@ -198,8 +203,49 @@ func (c *Client) ReadEventLoop() {
 				Message: "This message should be a valid JSON",
 				UserId:  m.UserId,
 			}
+			continue
 		}
 
 		c.Room.Broadcast <- m
+	}
+}
+
+func (c *Client) WriteEventLoop() {
+	ticker := time.NewTicker(PING_PERIOD)
+	defer func() {
+		ticker.Stop()
+		c.Conn.Close()
+	}()
+
+	for {
+		select {
+		case message, ok := <-c.Send:
+			if !ok {
+				c.Conn.WriteJSON(Message{
+					Kind:    websocket.CloseMessage,
+					Message: "closing websocket conn",
+				})
+				return
+			}
+
+			if message.Kind == AuctionFinished {
+				close(c.Send)
+				return
+			}
+
+			c.Conn.SetWriteDeadline(time.Now().Add(WRITE_WAIT))
+
+			err := c.Conn.WriteJSON(message)
+			if err != nil {
+				c.Room.Unregister <- c
+				return
+			}
+		case <-ticker.C:
+			c.Conn.SetWriteDeadline(time.Now().Add(WRITE_WAIT))
+			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				slog.Error("unexpected write error", "error", err)
+				return
+			}
+		}
 	}
 }
