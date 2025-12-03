@@ -20,3 +20,7 @@ SELECT
   updated_at
 FROM products
 WHERE is_sold = FALSE;
+
+-- name: FindProductByID :one
+SELECT * FROM products
+WHERE id = $1;
