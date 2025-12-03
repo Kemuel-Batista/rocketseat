@@ -42,3 +42,12 @@ func (ps *ProductService) CreateProduct(
 
 	return id, nil
 }
+
+func (ps *ProductService) FindManyProducts(ctx context.Context) ([]pgstore.FindManyProductsRow, error) {
+	products, err := ps.queries.FindManyProducts(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return products, nil
+}
