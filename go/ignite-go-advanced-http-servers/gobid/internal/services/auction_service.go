@@ -98,6 +98,7 @@ func (r *AuctionRoom) broadcastMessage(m Message) {
 }
 
 func (r *AuctionRoom) Run() {
+	slog.Info("Auction has begun", "AuctionId", r.Id)
 	defer func() {
 		close(r.Broadcast)
 		close(r.Register)
