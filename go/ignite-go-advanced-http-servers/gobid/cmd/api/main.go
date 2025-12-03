@@ -63,6 +63,9 @@ func main() {
 				return true
 			},
 		},
+		AuctionLobby: services.AuctionLobby{
+			Rooms: make(map[uuid.UUID]*services.AuctionRoom),
+		},
 	}
 
 	api.BindRoutes()
