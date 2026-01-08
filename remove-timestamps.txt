@@ -1,0 +1,953 @@
+00:01
+Chegou agora o momento de a gente falar sobre Wait Groups e onde eles podem ser úteis.
+
+00:5.74
+Como sabemos, a computação é bom e útil que a gente possa lidar com o software que roda de forma paralela.
+
+00:10.82
+Seja baixando um arquivo, processando dados, fazendo requisição HTTP,
+
+00:14.8
+e a gente sabe que Go sempre ajuda a gente no modelo de concorrência.
+
+00:18.14
+Nas nossas últimas aulas a gente falou muito sobre como a gente faz para cancelar uma gorrotine antes de ela terminar,
+
+00:25.1
+por algum motivo qualquer.
+
+00:28.94
+A gente também falou sobre como a gente pode definir o momento exato para uma gorrotine ser finalizada.
+
+00:33.02
+Mas e como a gente faz para ter certeza que uma gorrotina ou uma tarefa terminou,
+
+00:39.38
+para assim a gente poder seguir em frente com a nossa próxima tarefa?
+
+00:44.54
+A gente sabe que a gente pode usar um done channel, como a gente tem visto
+
+00:47.96
+nos nossos últimos exemplos. Então eu posso criar aqui, por exemplo,
+
+00:52.78
+eu já tenho aqui um arquivo main.go, e eu posso aqui
+
+00:56.16
+criar no package main.
+
+01:1.5600000000000023
+Criar uma função main.
+
+01:6.359999999999999
+E aqui dentro, spawnar uma goroutine
+
+01:7.900000000000006
+igual vai ser uma função
+
+01:11.379999999999995
+e o que essa função vai fazer aqui
+
+01:13.879999999999995
+vai ser um
+
+01:15.159999999999997
+time.sleep
+
+01:20.060000000000002
+e vai ser um time.sleep
+
+01:22.459999999999994
+de time.second
+
+01:24.239999999999995
+1 não precisaria multiplicar por 1 aqui e vai ser um time.slip de time.second 1, só para a gente...
+
+01:28.099999999999994
+Não precisaria multiplicar por 1 aqui, mas tudo bem.
+
+01:30.86
+E aqui eu vou fazer um fmt.println
+
+01:33.599999999999994
+dizendo que terminou.
+
+01:40.739999999999995
+Se eu rodar esse programa,
+
+01:44.400000000000006
+ele não vai mostrar que rodou
+
+01:47.78
+Porque assim que a nossa main
+
+01:49.34
+Ela é finalizada
+
+01:50.08
+Todas as corrotinas que tem spawnadas
+
+01:52.66
+A partir dessa main
+
+01:53.519999999999996
+Vão ser mortas
+
+01:54.900000000000006
+Então
+
+01:56.099999999999994
+Pra gente fazer com que isso aqui
+
+01:59.42
+Realmente acabe
+
+02:2.180000000000007
+A gente precisa
+
+02:3.1400000000000006
+Usar de um channel Que a gente geralmente usa, a gente chama de done channel.
+
+02:10.039999999999992
+Então, para fazer isso, a gente vai fazer um done, que vai ser um make change struct.
+
+02:19.22
+Vai ser um change int 1, não i, 1 e aqui
+
+02:26.24000000000001
+a gente escreve pra dentro do
+
+02:28.180000000000007
+done, que a gente acaba
+
+02:29.599999999999994
+na verdade a gente escreve pra dentro do done, a gente não lê do done
+
+02:32.22
+a gente escreve, sei lá, o valor
+
+02:34.120000000000005
+qualquer, enviar 0
+
+02:35.66
+e aqui no nosso done
+
+02:37.80000000000001
+a gente, na nossa main, né
+
+02:40.02000000000001
+fora da nossa cor rotina, a gente lê
+
+02:42.19999999999999
+desse done
+
+02:43.639999999999986
+então se eu rodar dessa forma, go run main.go
+
+02:46.52000000000001
+ele espera
+
+02:48.46000000000001
+um segundo, vai printar que terminou e assim
+
+02:50.24000000000001
+que ele terminar, ele envia
+
+02:51.78
+algo pra esse channel e o channel que a gente tinha
+
+02:54.22
+a leitura da nossa main, o channel
+
+02:56.44
+cujo a gente lia, passou
+
+02:58.44
+a ser liberado de ler
+
+03:0.36000000000001364
+porque a gente enviou um favor pra ele.
+
+03:2.460000000000008
+E como a gente já falou na nossa última aula, o pacote sim
+
+03:06
+que vai ser um dos seus melhores amigos
+
+03:7.9199999999999875
+durante a jornada de Google. Mas eu também quero aproveitar
+
+03:9.900000000000006
+pra deixar alguns pacotes que você pode acabar
+
+03:11.860000000000014
+achando interessantes pra alguns problemas
+
+03:13.939999999999998
+no futuro. Que você pode
+
+03:15.97999999999999
+acabar precisando
+
+03:18.099999999999994
+em situações mais específicas.
+
+03:20.72
+E por isso a gente não vai cobrir
+
+03:21.919999999999987
+elas aqui, mas é uma boa dar uma lida na documentação, tentar aplicar esses exemplos pequ pelo pacote Atomic podem ser bem úteis quando
+
+03:45.24000000000001
+você for lidar com algo que você vai precisar ser muito performático, extremamente performático,
+
+03:51.139999999999986
+ou em aplicações low level, no qual o Go às vezes pode ser útil.
+
+03:55.360000000000014
+Como diz a própria introdução desse pacote aqui, essas funções requerem muita atenção
+
+04:01
+e cuidado para serem usadas de forma correta, exceto quando falamos de aplicação low-level.
+
+04:6.439999999999998
+Sincronização deve ser feita através de channels ou facilitadores do package sync.
+
+04:11.740000000000009
+E aí ele está aqui citando o mutex, rwmutex, waitgroups e por aí vai.
+
+04:16.899999999999977
+Eu recomendo você ler isso aqui para você entender como é a implementação mesmo
+
+04:21
+de algumas das coisas que a gente usa em Go.
+
+04:23.360000000000014
+Entender como é que a concorrência funciona em baixo nível,
+
+04:26.25999999999999
+fora do domínio de Go comum com channels e mutexas.
+
+04:30.69999999999999
+Bem, voltando para Waitgroups.
+
+04:33.89999999999998
+A forma que eu gosto de pensar de Waitgroups é como se fosse um maestro
+
+04:37.639999999999986
+conduzindo uma orquestra.
+
+04:40.19999999999999
+O dever dele aqui é ter certeza que cada músico,
+
+04:43.079999999999984
+as nossas gorrotinas, terminem cada nota antes da próxima na nossa tablatura ser iniciada.
+
+04:50.139999999999986
+Um compositor que vai lidar com esperar algo para outra coisa ser feita em seguida.
+
+04:53.98000000000002
+Ou até mesmo terminar sua peça caso alguém erre alguma nota da sua música.
+
+05:0.5400000000000205
+E a gente viu aqui o exemplo que o nosso programa pode também, às vezes,
+
+05:4.720000000000027
+acabar antes das nossas gorrotinas terminarem.
+
+05:7.920000000000016
+O Done Channel, como a gente está vendo aqui, resolve isso.
+
+05:11.339999999999975
+Mas o WaitGroups funciona de uma forma bem melhor, como se fosse um contador de tarefas.
+
+05:17.860000000000014
+Vamos mudar um pouco o nosso exemplo para usar de WaitGroups.
+
+05:22.160000000000025
+Então, eu vou criar aqui uma função worker que vai receber um id inteiro e um
+
+05:31.879999999999995
+wg que vai ser um ponteiro de sync.weightGroup. Tem que ser um ponteiro aqui, eu vou explicar um
+
+05:39.56
+pouquinho mais do porquê que isso aqui sempre deve ser um ponteiro, mas vamos seguindo em frente.
+
+05:50.45999999999998
+Então, aqui é sempre bom que a gente use um defer também para lidar com o done do nosso waitgroup. Então, wg.done, que sinaliza que a nossa tarefa terminou. É bem parecido
+
+05:59.95999999999998
+com escrever para o nosso channel de done. E aqui eu vou fazer um fmt.printf e aqui eu
+
+06:8.639999999999986
+vou colocar worker, porcentagem de, onde eu vou printar o id dele, starting, e aqui id,
+
+06:18.95999999999998
+e aqui eu vou colocar finish, ou então done, sinalizando que ele terminou. E aqui eu vou colocar finish, ou então done, sinalizando que ele terminou.
+
+06:27.19999999999999
+E aqui eu vou fazer um time.sleep para simular um trabalho que ele está fazendo, por exemplo, uma requisição, algum servidor, ou então lendo algo de um banco de dados.
+
+06:38.04000000000002
+Eu espero que não demore 500 milissegundos, mas time.
+
+06:45.98000000000002
+Millisecond.
+
+06:46.72000000000003
+Não micro.
+
+06:48.30000000000001
+Millisecond.
+
+06:51.04000000000002
+E aqui a gente vai spawnar essas tasks.
+
+06:52.81999999999999
+Então var wg vai ser o nosso
+
+06:54.94
+sync.
+
+06:57.879999999999995
+.hgroup.
+
+06:58.860000000000014
+A gente não precisa usar o make para criar um
+
+07:1.0199999999999818
+.hgroup. Você pode criar dessa forma
+
+07:3.1200000000000045
+mesmo. E eu vou criar
+
+07:4.839999999999975
+uma constante com um contador dando forma mesmo. E eu vou criar uma
+
+07:5.639999999999986
+constante com um contador das nossas tasks, né? Então eu quero spawnar tasks, 5 tasks
+
+07:11.620000000000005
+aqui, e fazer um wg.add das nossas tasks. E aqui eu vou fazer a inicialização de cada uma delas dentro de um for loop. i igual a zero
+
+07:27.120000000000005
+i menor ou igual
+
+07:29.560000000000002
+tasks
+
+07:31.339999999999975
+vai ser i mais mais.
+
+07:33.95999999999998
+E aqui eu vou fazer o go
+
+07:35.19999999999999
+worker, passando
+
+07:38.079999999999984
+o nosso i e o
+
+07:40
+nosso wait group,
+
+07:42.120000000000005
+só que tem que lembrar aqui
+
+07:43.51999999999998
+de passar como um
+
+07:45.56
+ponteiro
+
+07:46.420000000000016
+feito isso, o equivalente
+
+07:49.89999999999998
+da gente ler lá do nosso channel
+
+07:51.72000000000003
+de Dan, na verdade aqui vai ser
+
+07:53.81999999999999
+o wg.weight
+
+07:55.19999999999999
+o wg.weight ele é bem
+
+07:59.81999999999999
+mais complexo
+
+08:1.660000000000025
+do que ler apenas
+
+08:3.839999999999975
+de um channel.
+
+08:6.5400000000000205
+Talvez seja interessante vocês lerem isso aqui,
+
+08:9.100000000000023
+a implementação desse código,
+
+08:11.04000000000002
+porque algumas partes são bem simples.
+
+08:12.819999999999993
+Por exemplo, o dano aqui é só um wg.ed
+
+08:14.920000000000016
+no qual o contador a gente está adicionando um número negativo.
+
+08:18.139999999999986
+É bem legal a gente ler aqui,
+
+08:20.560000000000002
+que vai dizer muita coisa de como ele funciona.
+
+08:24.220000000000027
+Então tem muitos comentários aqui.
+
+08:26.060000000000002
+Bem interessante.
+
+08:27.180000000000007
+Beleza?
+
+08:28.19999999999999
+Então eu vou fechar esse buffer aqui.
+
+08:29.860000000000014
+E eu vou voltar para onde eu estava.
+
+08:31.839999999999975
+E assim que eu terminar.
+
+08:33.41999999999996
+Eu vou aproveitar para fazer um printf.
+
+08:37.620000000000005
+Mostrando que nossa done terminou.
+
+08:39.5
+Então main done.
+
+08:41.77999999999997
+Eu poderia usar um println aqui.
+
+08:43.24000000000001
+Mas está tudo bem. Eu vou usar um printf mesmo.done. Eu poderia usar um println aqui, mas tá tudo bem, eu vou usar um printf mesmo.
+
+08:47.879999999999995
+Então, go run main.go. Deixa eu printar isso de uma forma melhor, usar aqui algumas quebras de Então a gente viu aqui que nossos workers começaram, todos eles terminaram e a nossa
+
+09:11.379999999999995
+main terminou também.
+
+09:14.279999999999973
+Então vamos entender como é que isso aqui está funcionando.
+
+09:16.620000000000005
+O WG é como se fosse um contador.
+
+09:19.039999999999964
+Dentro do WG a gente tem um contador interno, se você for ler lá o add a gente vai ver justamente o que ele fala aqui, então se eu precisar por counter, a gente tem um computador interno, se você for ler lá o edge, a gente vai ver justamente o que
+
+09:26.059999999999945
+ele fala aqui, então se eu precisar por counter,
+
+09:28.639999999999986
+a gente tem um counter dentro do nosso
+
+09:30.17999999999995
+weight group. Vamos ver aqui a nossa struct.
+
+09:32.48000000000002
+A gente tem um counter
+
+09:34.01999999999998
+aqui, que é um uint64,
+
+09:36.200000000000045
+então, de novo, lembra do
+
+09:37.89999999999998
+atomic que eu falei lá?
+
+09:40.01999999999998
+Os atomics são os primitivos no qual a gente
+
+09:42.01999999999998
+constrói partes da biblioteca de Go,
+
+09:45.379999999999995
+por exemplo, o AgeGroup.
+
+09:46.799999999999955
+Então, a gente tem um Atomic aqui, que é um Uint64.
+
+09:50.059999999999945
+Lembra, Atomic não divisível,
+
+09:52.15999999999997
+algo no qual, ao mudar, a gente tem uma operação não divisível aqui.
+
+09:56.15999999999997
+Então, protege de Race Conditions.
+
+09:58.65999999999997
+Então, voltando lá ao nosso AgeGroup, ao nosso Edge,
+
+10:2.0399999999999636
+a gente sabe que ele incrementa esse contador.
+
+10:6.039999999999964
+E aqui a gente está incrementando ele por 5 porque a gente vai spawnar 5
+
+10:8.120000000000005
+workers para serem
+
+10:10.120000000000005
+esperados. A gente está
+
+10:11.919999999999959
+esperando por 5 workers.
+
+10:14.539999999999964
+A gente também pode fazer isso aqui
+
+10:15.980000000000018
+de uma forma diferente. Caso você queira,
+
+10:18.039999999999964
+você pode fazer wg.age
+
+10:20.41999999999996
+1 aqui
+
+10:22.17999999999995
+para cada iteração.
+
+10:24.879999999999995
+Vai da sua escolha, às vezes
+
+10:26.24000000000001
+vai fazer mais sentido quando você sabe
+
+10:28.17999999999995
+quantas corrotinas você vai iniciar
+
+10:30.440000000000055
+geralmente a gente não precisa
+
+10:32.059999999999945
+fazer dessa forma
+
+10:34.01999999999998
+mas quando a gente não tem noção, quando é algo aqui
+
+10:36.24000000000001
+que pode ser passado por um parâmetro
+
+10:38.65999999999997
+vamos supor que a gente está fazendo algo
+
+10:40.25999999999999
+que a gente vai receber isso aqui
+
+10:41.48000000000002
+como parâmetro da nossa função, a gente não tem necessariamente quantos eles vão ser, talvez seja mais interessante
+
+10:46.10000000000002
+você adicionar
+
+10:47.60000000000002
+aqui um por um. Vai da
+
+10:50.059999999999945
+sua preferência. E aí, assim
+
+10:52.08000000000004
+que a gente adiciona esse contador, ele passa a ter
+
+10:54.17999999999995
+para cada vez o valor de 5.
+
+10:57.22000000000003
+E aí a gente vai
+
+10:57.98000000000002
+incrementando esse contador
+
+10:59.860000000000014
+até que ele tenha 5.
+
+11:1.67999999999995
+E o que a gente pode ter em noção que o computador,
+
+11:5.240000000000009
+até chegar a zero, o nosso weight é blocking.
+
+11:9.360000000000014
+Então, assim que todos os nossos done rodam,
+
+11:12.399999999999977
+e a gente passa a decrementar,
+
+11:14.659999999999968
+que o done roda o edge menos 1,
+
+11:17.600000000000023
+ou seja, ele decrementa 1 por 1 o nosso computador interno,
+
+11:21.559999999999945
+que é o state, se eu me lembro bem, é o state?
+
+11:24.980000000000018
+Isso aí, o state, que é o state, né? Você me lembra bem? É o state? Isso aí, o state, que é o nosso
+
+11:26.120000000000005
+atômico lá.
+
+11:29.5
+Quando a gente
+
+11:30.24000000000001
+chega no zero, o nosso
+
+11:31.940000000000055
+weight passa a ser unblocking.
+
+11:34.08000000000004
+Então, o weight vai parar de ser blocking e a gente vai
+
+11:36.120000000000005
+rodar o nosso
+
+11:37.65999999999997
+printf, acabando com as nossas
+
+11:39.799999999999955
+corrotinas. Mas onde isso é importante,
+
+11:42.559999999999945
+né? Vamos dar uma olhada onde isso pode ser bem útil.
+
+11:45
+O exemplo mais comum, assim, que a gente pode pensar é um web scraper. Então vamos supor
+
+11:50
+que a gente tem uma função que faz um fetch e a gente passa aqui uma URL que é uma string
+
+12:00
+e aqui dentro a gente faz algo, né? Do something that takes time.
+
+12:5.980000000000018
+Fazer algo que toma algum tempo.
+
+12:9.5
+E aí aqui
+
+12:9.960000000000036
+dentro, né? A gente, sei lá,
+
+12:12.080000000000041
+por exemplo, a gente tem aqui um...
+
+12:13.960000000000036
+A gente continua tendo nosso waitgroup, né? Mas a gente tem
+
+12:15.879999999999995
+uma URL, uma lista de URLs
+
+12:17.860000000000014
+que...
+
+12:20.700000000000045
+E aqui dentro a gente
+
+12:21.899999999999977
+acaba por fazer, né?
+
+12:23.82000000000005
+Algumas requisições para alguns sites.
+
+12:26.74000000000001
+https.google.com
+
+12:30.200000000000045
+A gente pode fazer, sei lá, por exemplo, também para Amazon.
+
+12:39.120000000000005
+Ou, sei lá, para Rocketseat.
+
+12:44.5
+E aí, a gente pode mudar esse for loop aqui, for underline url range
+
+12:55.60000000000002
+de urls, a gente vai fazer a nossa adição e a gente vai spawnar o nosso fetch URL aqui passando a nossa URL
+
+13:6.019999999999982
+e o nosso
+
+13:8.139999999999986
+waitgroup aqui, dando
+
+13:9.980000000000018
+obviamente um the for done
+
+13:12
+wg.done
+
+13:14.240000000000009
+Esse é um exemplo bem básico
+
+13:16.67999999999995
+que pode se tornar
+
+13:18.220000000000027
+um padrão na concorrência
+
+13:20.17999999999995
+chamado Thaline. A gente vai dar
+
+13:22.139999999999986
+uma olhada no projeto, mas
+
+13:24.220000000000027
+vamos demonstrar um exemplo aqui.
+
+13:27.019999999999982
+Vamos supor que você tenha uma API que roda em um container Docker, tendo várias instâncias
+
+13:32.39999999999998
+replicadas. Ou então, até mesmo ao invés de uma API complexa, você tem um microserviço
+
+13:37.700000000000045
+de enviar e-mails específicos para usuários. Então vamos supor que a gente tenha aqui um email service e por algum motivo essa instância dos nossos microserviços, vamos supor que a gente tenha um microserviço da API de usuários e a gente pinga esse microserviço para fazer um envio de email para os nossos usuários. E por algum motivo, o nosso microserviço foi finalizado,
+
+14:9.700000000000045
+foi parado, reiniciado,
+
+14:11.139999999999986
+por qualquer motivo, não importa.
+
+14:12.960000000000036
+A gente sabe que enviar e-mails
+
+14:14.919999999999959
+é bem parecido com uma requisição, correto?
+
+14:17.879999999999995
+Na verdade, ele é uma requisição.
+
+14:19.91999999999996
+A gente envia uma requisição SMTP,
+
+14:24.120000000000005
+que é Simple Mail Transfer Protocol. Então, a gente faz uma requisição SMTP, que é Simple Mail Transfer Protocol.
+
+14:28
+Então, a gente faz uma requisição SMTP e, como a gente sabe, requisições demoram.
+
+14:32.77999999999997
+Eu sei que a maioria das requisições vai rodar por volta dos 200 milissegundos,
+
+14:37.51999999999998
+às vezes até 100 milissegundos, mas em tempo computacional milissegundos são uma eternidade.
+
+14:44.059999999999945
+Vamos supor que a nossa API fez uma
+
+14:45.82000000000005
+requisição para o nosso email service
+
+14:47.799999999999955
+um milissegundo antes
+
+14:49.89999999999998
+da gente ter
+
+14:51.67999999999995
+um sigterm no nosso
+
+14:54.25999999999999
+ES.
+
+14:55.77999999999997
+O sigterm é basicamente
+
+14:57.72000000000003
+um sinal no
+
+14:59.860000000000014
+Unix que pede, por favor,
+
+15:2.3600000000000136
+para o nosso programa morrer.
+
+15:4.2000000000000455
+A gente não pode confundir. O SIGKILL, na verdade,
+
+15:6.2000000000000455
+ele manda o programa morrer sem mais nem menos.
+
+15:8.019999999999982
+Ele realmente termina o programa. O SIGTERM
+
+15:10
+pede, por favor, para o programa morrer e limpar
+
+15:11.759999999999991
+tudo que ele utilizava. Ao receber
+
+15:14.100000000000023
+o SIGKILL, não tem muito o que a gente
+
+15:16
+fazer. O programa só foi morto e não tem mais o que fazer. o SIGTERM, a boa prática é a gente tratar esse sinal e finalizar a nossa aplicação
+
+15:26.039999999999964
+limpando tudo que foi requisitado.
+
+15:28.32000000000005
+E também tendo certeza que todas as nossas tarefas
+
+15:30.059999999999945
+em background fossem
+
+15:32.139999999999986
+devidamente terminadas ou tratadas.
+
+15:34.75999999999999
+E aí vai da implementação.
+
+15:36.299999999999955
+Vamos supor que não só
+
+15:38.25999999999999
+essa, a gente recebeu algumas requisições
+
+15:40.539999999999964
+desse nosso email service
+
+15:42.48000000000002
+e a gente tem uma série
+
+15:44.120000000000005
+de envios de email
+
+15:45.200000000000045
+na cadeia desse servidor
+
+15:48.91999999999996
+e nenhuma delas está rodando
+
+15:50.639999999999986
+nenhuma delas terminou de rodar quando o sigterm foi enviado
+
+15:53.879999999999995
+quando isso acontece, a boa prática é a gente terminar com cada uma delas
+
+15:58
+e aí vai dar implementação
+
+15:59.639999999999986
+talvez valha a pena você
+
+16:1.1399999999999864
+ou deixar a requisição de enviar o email terminar
+
+16:4.740000000000009
+bem provavelmente
+
+16:5.759999999999991
+usando, como a gente falou,
+
+16:7.980000000000018
+de um waitgroup,
+
+16:10.139999999999986
+mas vai ter casos também que as penas
+
+16:12.080000000000041
+você vai querer só dar drop mesmo
+
+16:14.240000000000009
+nessa requisição e
+
+16:16.200000000000045
+tanto faz, mandar o e-mail ou não
+
+16:18.039999999999964
+e aí logar isso e devolver para o nosso
+
+16:20.200000000000045
+API, depende da implementação.
+
+16:23
+E eu digo isso porque
+
+16:24.220000000000027
+às vezes um deles pode
+
+16:26.120000000000005
+dar hang e o nosso
+
+16:27.82000000000005
+sigterm não terminar nunca a nossa aplicação.
+
+16:31.480000000000018
+Mas aí
+
+16:32.22000000000003
+você sabe usar o context, né?
+
+16:33.91999999999996
+E esperando que você já tenha
+
+16:35.960000000000036
+entendido que se algo está demorando demais
+
+16:38.17999999999995
+para terminar, o context deve lidar
+
+16:40.139999999999986
+com isso, tendo um context
+
+16:41.879999999999995
+with timeout. A gente falou sobre
+
+16:44.10000000000002
+isso bastante nas
+
+16:45.039999999999964
+nossas últimas aulas, então eu espero que esteja bem fresco na sua memória.
+
+16:48.75999999999999
+E qual seria a melhor forma de esperar para uma task ser terminada de forma
+
+16:52.15999999999997
+graciosa? A gente falou aqui anteriormente que é usar o RateGroup. Como a gente
+
+16:58.059999999999945
+geralmente chama isso de Graceful Shutdown, do mesmo jeito que a gente está em
+
+17:2.1200000000000045
+Graceful Error Handling, é lidar com erros e lidar com possíveis
+
+17:6.019999999999982
+sinais de terminação também.
+
+17:8.559999999999945
+Então, vamos codar um exemplo
+
+17:9.900000000000091
+bem pequeno de como isso
+
+17:12.039999999999964
+funciona, emulando o
+
+17:13.940000000000055
+e-mail. Beleza?

@@ -1,0 +1,318 @@
+Chegou agora o momento de a gente falar sobre Wait Groups e onde eles podem ser úteis.
+Como sabemos, a computação é bom e útil que a gente possa lidar com o software que roda de forma paralela.
+Seja baixando um arquivo, processando dados, fazendo requisição HTTP,
+e a gente sabe que Go sempre ajuda a gente no modelo de concorrência.
+Nas nossas últimas aulas a gente falou muito sobre como a gente faz para cancelar uma gorrotine antes de ela terminar,
+por algum motivo qualquer.
+A gente também falou sobre como a gente pode definir o momento exato para uma gorrotine ser finalizada.
+Mas e como a gente faz para ter certeza que uma gorrotina ou uma tarefa terminou,
+para assim a gente poder seguir em frente com a nossa próxima tarefa?
+A gente sabe que a gente pode usar um done channel, como a gente tem visto
+nos nossos últimos exemplos. Então eu posso criar aqui, por exemplo,
+eu já tenho aqui um arquivo main.go, e eu posso aqui
+criar no package main.
+Criar uma função main.
+E aqui dentro, spawnar uma goroutine
+igual vai ser uma função
+e o que essa função vai fazer aqui
+vai ser um
+time.sleep
+e vai ser um time.sleep
+de time.second
+1 não precisaria multiplicar por 1 aqui e vai ser um time.slip de time.second 1, só para a gente...
+Não precisaria multiplicar por 1 aqui, mas tudo bem.
+E aqui eu vou fazer um fmt.println
+dizendo que terminou.
+Se eu rodar esse programa,
+ele não vai mostrar que rodou
+Porque assim que a nossa main
+Ela é finalizada
+Todas as corrotinas que tem spawnadas
+A partir dessa main
+Vão ser mortas
+Então
+Pra gente fazer com que isso aqui
+Realmente acabe
+A gente precisa
+Usar de um channel Que a gente geralmente usa, a gente chama de done channel.
+Então, para fazer isso, a gente vai fazer um done, que vai ser um make change struct.
+Vai ser um change int 1, não i, 1 e aqui
+a gente escreve pra dentro do
+done, que a gente acaba
+na verdade a gente escreve pra dentro do done, a gente não lê do done
+a gente escreve, sei lá, o valor
+qualquer, enviar 0
+e aqui no nosso done
+a gente, na nossa main, né
+fora da nossa cor rotina, a gente lê
+desse done
+então se eu rodar dessa forma, go run main.go
+ele espera
+um segundo, vai printar que terminou e assim
+que ele terminar, ele envia
+algo pra esse channel e o channel que a gente tinha
+a leitura da nossa main, o channel
+cujo a gente lia, passou
+a ser liberado de ler
+porque a gente enviou um favor pra ele.
+E como a gente já falou na nossa última aula, o pacote sim
+que vai ser um dos seus melhores amigos
+durante a jornada de Google. Mas eu também quero aproveitar
+pra deixar alguns pacotes que você pode acabar
+achando interessantes pra alguns problemas
+no futuro. Que você pode
+acabar precisando
+em situações mais específicas.
+E por isso a gente não vai cobrir
+elas aqui, mas é uma boa dar uma lida na documentação, tentar aplicar esses exemplos pequ pelo pacote Atomic podem ser bem úteis quando
+você for lidar com algo que você vai precisar ser muito performático, extremamente performático,
+ou em aplicações low level, no qual o Go às vezes pode ser útil.
+Como diz a própria introdução desse pacote aqui, essas funções requerem muita atenção
+e cuidado para serem usadas de forma correta, exceto quando falamos de aplicação low-level.
+Sincronização deve ser feita através de channels ou facilitadores do package sync.
+E aí ele está aqui citando o mutex, rwmutex, waitgroups e por aí vai.
+Eu recomendo você ler isso aqui para você entender como é a implementação mesmo
+de algumas das coisas que a gente usa em Go.
+Entender como é que a concorrência funciona em baixo nível,
+fora do domínio de Go comum com channels e mutexas.
+Bem, voltando para Waitgroups.
+A forma que eu gosto de pensar de Waitgroups é como se fosse um maestro
+conduzindo uma orquestra.
+O dever dele aqui é ter certeza que cada músico,
+as nossas gorrotinas, terminem cada nota antes da próxima na nossa tablatura ser iniciada.
+Um compositor que vai lidar com esperar algo para outra coisa ser feita em seguida.
+Ou até mesmo terminar sua peça caso alguém erre alguma nota da sua música.
+E a gente viu aqui o exemplo que o nosso programa pode também, às vezes,
+acabar antes das nossas gorrotinas terminarem.
+O Done Channel, como a gente está vendo aqui, resolve isso.
+Mas o WaitGroups funciona de uma forma bem melhor, como se fosse um contador de tarefas.
+Vamos mudar um pouco o nosso exemplo para usar de WaitGroups.
+Então, eu vou criar aqui uma função worker que vai receber um id inteiro e um
+wg que vai ser um ponteiro de sync.weightGroup. Tem que ser um ponteiro aqui, eu vou explicar um
+pouquinho mais do porquê que isso aqui sempre deve ser um ponteiro, mas vamos seguindo em frente.
+Então, aqui é sempre bom que a gente use um defer também para lidar com o done do nosso waitgroup. Então, wg.done, que sinaliza que a nossa tarefa terminou. É bem parecido
+com escrever para o nosso channel de done. E aqui eu vou fazer um fmt.printf e aqui eu
+vou colocar worker, porcentagem de, onde eu vou printar o id dele, starting, e aqui id,
+e aqui eu vou colocar finish, ou então done, sinalizando que ele terminou. E aqui eu vou colocar finish, ou então done, sinalizando que ele terminou.
+E aqui eu vou fazer um time.sleep para simular um trabalho que ele está fazendo, por exemplo, uma requisição, algum servidor, ou então lendo algo de um banco de dados.
+Eu espero que não demore 500 milissegundos, mas time.
+Millisecond.
+Não micro.
+Millisecond.
+E aqui a gente vai spawnar essas tasks.
+Então var wg vai ser o nosso
+sync.
+.hgroup.
+A gente não precisa usar o make para criar um
+.hgroup. Você pode criar dessa forma
+mesmo. E eu vou criar
+uma constante com um contador dando forma mesmo. E eu vou criar uma
+constante com um contador das nossas tasks, né? Então eu quero spawnar tasks, 5 tasks
+aqui, e fazer um wg.add das nossas tasks. E aqui eu vou fazer a inicialização de cada uma delas dentro de um for loop. i igual a zero
+i menor ou igual
+tasks
+vai ser i mais mais.
+E aqui eu vou fazer o go
+worker, passando
+o nosso i e o
+nosso wait group,
+só que tem que lembrar aqui
+de passar como um
+ponteiro
+feito isso, o equivalente
+da gente ler lá do nosso channel
+de Dan, na verdade aqui vai ser
+o wg.weight
+o wg.weight ele é bem
+mais complexo
+do que ler apenas
+de um channel.
+Talvez seja interessante vocês lerem isso aqui,
+a implementação desse código,
+porque algumas partes são bem simples.
+Por exemplo, o dano aqui é só um wg.ed
+no qual o contador a gente está adicionando um número negativo.
+É bem legal a gente ler aqui,
+que vai dizer muita coisa de como ele funciona.
+Então tem muitos comentários aqui.
+Bem interessante.
+Beleza?
+Então eu vou fechar esse buffer aqui.
+E eu vou voltar para onde eu estava.
+E assim que eu terminar.
+Eu vou aproveitar para fazer um printf.
+Mostrando que nossa done terminou.
+Então main done.
+Eu poderia usar um println aqui.
+Mas está tudo bem. Eu vou usar um printf mesmo.done. Eu poderia usar um println aqui, mas tá tudo bem, eu vou usar um printf mesmo.
+Então, go run main.go. Deixa eu printar isso de uma forma melhor, usar aqui algumas quebras de Então a gente viu aqui que nossos workers começaram, todos eles terminaram e a nossa
+main terminou também.
+Então vamos entender como é que isso aqui está funcionando.
+O WG é como se fosse um contador.
+Dentro do WG a gente tem um contador interno, se você for ler lá o add a gente vai ver justamente o que ele fala aqui, então se eu precisar por counter, a gente tem um computador interno, se você for ler lá o edge, a gente vai ver justamente o que
+ele fala aqui, então se eu precisar por counter,
+a gente tem um counter dentro do nosso
+weight group. Vamos ver aqui a nossa struct.
+A gente tem um counter
+aqui, que é um uint64,
+então, de novo, lembra do
+atomic que eu falei lá?
+Os atomics são os primitivos no qual a gente
+constrói partes da biblioteca de Go,
+por exemplo, o AgeGroup.
+Então, a gente tem um Atomic aqui, que é um Uint64.
+Lembra, Atomic não divisível,
+algo no qual, ao mudar, a gente tem uma operação não divisível aqui.
+Então, protege de Race Conditions.
+Então, voltando lá ao nosso AgeGroup, ao nosso Edge,
+a gente sabe que ele incrementa esse contador.
+E aqui a gente está incrementando ele por 5 porque a gente vai spawnar 5
+workers para serem
+esperados. A gente está
+esperando por 5 workers.
+A gente também pode fazer isso aqui
+de uma forma diferente. Caso você queira,
+você pode fazer wg.age
+1 aqui
+para cada iteração.
+Vai da sua escolha, às vezes
+vai fazer mais sentido quando você sabe
+quantas corrotinas você vai iniciar
+geralmente a gente não precisa
+fazer dessa forma
+mas quando a gente não tem noção, quando é algo aqui
+que pode ser passado por um parâmetro
+vamos supor que a gente está fazendo algo
+que a gente vai receber isso aqui
+como parâmetro da nossa função, a gente não tem necessariamente quantos eles vão ser, talvez seja mais interessante
+você adicionar
+aqui um por um. Vai da
+sua preferência. E aí, assim
+que a gente adiciona esse contador, ele passa a ter
+para cada vez o valor de 5.
+E aí a gente vai
+incrementando esse contador
+até que ele tenha 5.
+E o que a gente pode ter em noção que o computador,
+até chegar a zero, o nosso weight é blocking.
+Então, assim que todos os nossos done rodam,
+e a gente passa a decrementar,
+que o done roda o edge menos 1,
+ou seja, ele decrementa 1 por 1 o nosso computador interno,
+que é o state, se eu me lembro bem, é o state?
+Isso aí, o state, que é o state, né? Você me lembra bem? É o state? Isso aí, o state, que é o nosso
+atômico lá.
+Quando a gente
+chega no zero, o nosso
+weight passa a ser unblocking.
+Então, o weight vai parar de ser blocking e a gente vai
+rodar o nosso
+printf, acabando com as nossas
+corrotinas. Mas onde isso é importante,
+né? Vamos dar uma olhada onde isso pode ser bem útil.
+O exemplo mais comum, assim, que a gente pode pensar é um web scraper. Então vamos supor
+que a gente tem uma função que faz um fetch e a gente passa aqui uma URL que é uma string
+e aqui dentro a gente faz algo, né? Do something that takes time.
+Fazer algo que toma algum tempo.
+E aí aqui
+dentro, né? A gente, sei lá,
+por exemplo, a gente tem aqui um...
+A gente continua tendo nosso waitgroup, né? Mas a gente tem
+uma URL, uma lista de URLs
+que...
+E aqui dentro a gente
+acaba por fazer, né?
+Algumas requisições para alguns sites.
+https.google.com
+A gente pode fazer, sei lá, por exemplo, também para Amazon.
+Ou, sei lá, para Rocketseat.
+E aí, a gente pode mudar esse for loop aqui, for underline url range
+de urls, a gente vai fazer a nossa adição e a gente vai spawnar o nosso fetch URL aqui passando a nossa URL
+e o nosso
+waitgroup aqui, dando
+obviamente um the for done
+wg.done
+Esse é um exemplo bem básico
+que pode se tornar
+um padrão na concorrência
+chamado Thaline. A gente vai dar
+uma olhada no projeto, mas
+vamos demonstrar um exemplo aqui.
+Vamos supor que você tenha uma API que roda em um container Docker, tendo várias instâncias
+replicadas. Ou então, até mesmo ao invés de uma API complexa, você tem um microserviço
+de enviar e-mails específicos para usuários. Então vamos supor que a gente tenha aqui um email service e por algum motivo essa instância dos nossos microserviços, vamos supor que a gente tenha um microserviço da API de usuários e a gente pinga esse microserviço para fazer um envio de email para os nossos usuários. E por algum motivo, o nosso microserviço foi finalizado,
+foi parado, reiniciado,
+por qualquer motivo, não importa.
+A gente sabe que enviar e-mails
+é bem parecido com uma requisição, correto?
+Na verdade, ele é uma requisição.
+A gente envia uma requisição SMTP,
+que é Simple Mail Transfer Protocol. Então, a gente faz uma requisição SMTP, que é Simple Mail Transfer Protocol.
+Então, a gente faz uma requisição SMTP e, como a gente sabe, requisições demoram.
+Eu sei que a maioria das requisições vai rodar por volta dos 200 milissegundos,
+às vezes até 100 milissegundos, mas em tempo computacional milissegundos são uma eternidade.
+Vamos supor que a nossa API fez uma
+requisição para o nosso email service
+um milissegundo antes
+da gente ter
+um sigterm no nosso
+ES.
+O sigterm é basicamente
+um sinal no
+Unix que pede, por favor,
+para o nosso programa morrer.
+A gente não pode confundir. O SIGKILL, na verdade,
+ele manda o programa morrer sem mais nem menos.
+Ele realmente termina o programa. O SIGTERM
+pede, por favor, para o programa morrer e limpar
+tudo que ele utilizava. Ao receber
+o SIGKILL, não tem muito o que a gente
+fazer. O programa só foi morto e não tem mais o que fazer. o SIGTERM, a boa prática é a gente tratar esse sinal e finalizar a nossa aplicação
+limpando tudo que foi requisitado.
+E também tendo certeza que todas as nossas tarefas
+em background fossem
+devidamente terminadas ou tratadas.
+E aí vai da implementação.
+Vamos supor que não só
+essa, a gente recebeu algumas requisições
+desse nosso email service
+e a gente tem uma série
+de envios de email
+na cadeia desse servidor
+e nenhuma delas está rodando
+nenhuma delas terminou de rodar quando o sigterm foi enviado
+quando isso acontece, a boa prática é a gente terminar com cada uma delas
+e aí vai dar implementação
+talvez valha a pena você
+ou deixar a requisição de enviar o email terminar
+bem provavelmente
+usando, como a gente falou,
+de um waitgroup,
+mas vai ter casos também que as penas
+você vai querer só dar drop mesmo
+nessa requisição e
+tanto faz, mandar o e-mail ou não
+e aí logar isso e devolver para o nosso
+API, depende da implementação.
+E eu digo isso porque
+às vezes um deles pode
+dar hang e o nosso
+sigterm não terminar nunca a nossa aplicação.
+Mas aí
+você sabe usar o context, né?
+E esperando que você já tenha
+entendido que se algo está demorando demais
+para terminar, o context deve lidar
+com isso, tendo um context
+with timeout. A gente falou sobre
+isso bastante nas
+nossas últimas aulas, então eu espero que esteja bem fresco na sua memória.
+E qual seria a melhor forma de esperar para uma task ser terminada de forma
+graciosa? A gente falou aqui anteriormente que é usar o RateGroup. Como a gente
+geralmente chama isso de Graceful Shutdown, do mesmo jeito que a gente está em
+Graceful Error Handling, é lidar com erros e lidar com possíveis
+sinais de terminação também.
+Então, vamos codar um exemplo
+bem pequeno de como isso
+funciona, emulando o
+e-mail. Beleza?
