@@ -2,9 +2,9 @@
   "expo": {
     "name": "marketplace-app",
     "slug": "marketplace-app",
-    "scheme": "marketplace-app",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "marketplace",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -25,6 +25,7 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
