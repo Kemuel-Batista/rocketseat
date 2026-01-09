@@ -1,10 +1,7 @@
 import { Redirect } from 'expo-router'
 
 export default function App() {
-  const userData = {
-    token: 'hdashjdqaeq123',
-    name: 'User test',
-  }
+  const userData = null
 
   if (userData) {
     return <Redirect href="/(private)/home" />
