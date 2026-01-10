@@ -3,7 +3,7 @@ import { Platform } from 'react-native'
 
 function getBaseURL() {
   return Platform.select({
-    ios: 'http://192.168.95.128:3001',
+    ios: 'http://192.168.1.8:3001',
     android: 'http://10.0.2.2:3001',
   })
 }
