@@ -28,7 +28,6 @@ export const useRegisterViewModel = () => {
 
     const mutationResponse =
       await userRegisterMutation.mutateAsync(registerData)
-    console.log(mutationResponse)
 
     setSession({
       refreshToken: mutationResponse.refreshToken,
@@ -36,8 +35,6 @@ export const useRegisterViewModel = () => {
       user: mutationResponse.user,
     })
   })
-
-  console.log(user)
 
   return {
     control,
