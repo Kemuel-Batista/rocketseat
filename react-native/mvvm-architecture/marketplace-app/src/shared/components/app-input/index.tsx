@@ -47,7 +47,6 @@ export function AppInput({
   } = useAppInputViewModel({
     isError: !!error,
     isDisabled,
-    error,
     secureTextEntry,
     onFocus,
     onBlur,
@@ -55,8 +54,11 @@ export function AppInput({
     onChangeText,
     value,
   })
+
   const styles = appInputVariants({
     isFocused,
+    isDisabled,
+    isError: !!error,
   })
 
   return (
@@ -78,12 +80,18 @@ export function AppInput({
           value={value}
           onChangeText={handleTextChange}
           className={styles.input()}
+          secureTextEntry={showPassword}
           {...rest}
         />
 
-        <TouchableOpacity>
-          <Ionicons name={rightIcon} size={22} />
-        </TouchableOpacity>
+        {secureTextEntry && (
+          <TouchableOpacity activeOpacity={0.7} onPress={handlePasswordToggle}>
+            <Ionicons
+              name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+              size={22}
+            />
+          </TouchableOpacity>
+        )}
       </Pressable>
 
       {error && (
