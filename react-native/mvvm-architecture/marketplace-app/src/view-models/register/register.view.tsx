@@ -1,4 +1,3 @@
-import { useState, type FC } from 'react'
 import { ScrollView, Text, TouchableOpacity } from 'react-native'
 import { useRegisterViewModel } from './use-register.view-model'
 import { AppInputController } from '@/shared/components/app-input-controller'
@@ -7,13 +6,10 @@ import { router } from 'expo-router'
 import { DismissKeyboardView } from '@/shared/components/dismiss-keyboard-view'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export const RegisterView: FC<ReturnType<typeof useRegisterViewModel>> = ({
-  onSubmit,
+export function RegisterView({
   control,
-}) => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
+  onSubmit,
+}: ReturnType<typeof useRegisterViewModel>) {
   return (
     <SafeAreaView className="flex-1">
       <DismissKeyboardView>
@@ -28,13 +24,7 @@ export const RegisterView: FC<ReturnType<typeof useRegisterViewModel>> = ({
             label="NOME"
             control={control}
             name="name"
-          />
-
-          <AppInputController
-            leftIcon="mail-outline"
-            label="E-MAIL"
-            control={control}
-            name="email"
+            placeholder="Seu nome completo"
           />
 
           <AppInputController
@@ -42,6 +32,17 @@ export const RegisterView: FC<ReturnType<typeof useRegisterViewModel>> = ({
             label="TELEFONE"
             control={control}
             name="phone"
+            placeholder="(00) 00000-0000"
+          />
+
+          <Text className="mt-6 text-base font-bold text-gray-500">Acesso</Text>
+
+          <AppInputController
+            leftIcon="mail-outline"
+            label="E-MAIL"
+            control={control}
+            name="email"
+            placeholder="mail@example.com.br"
           />
 
           <AppInputController
@@ -50,6 +51,7 @@ export const RegisterView: FC<ReturnType<typeof useRegisterViewModel>> = ({
             control={control}
             name="password"
             secureTextEntry
+            placeholder="Sua senha"
           />
 
           <AppInputController
@@ -58,6 +60,7 @@ export const RegisterView: FC<ReturnType<typeof useRegisterViewModel>> = ({
             control={control}
             name="confirmPassword"
             secureTextEntry
+            placeholder="Confirme a senha"
           />
 
           <TouchableOpacity onPress={onSubmit}>

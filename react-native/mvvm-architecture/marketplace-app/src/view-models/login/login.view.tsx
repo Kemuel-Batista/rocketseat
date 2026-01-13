@@ -5,8 +5,10 @@ import { router } from 'expo-router'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useLoginViewModel } from './use-login.view-model'
+import { AppInputController } from '@/shared/components/app-input-controller'
 
-export function LoginView() {
+export function LoginView({ control }: ReturnType<typeof useLoginViewModel>) {
   return (
     <SafeAreaView className="flex-1">
       <DismissKeyboardView>
@@ -16,7 +18,21 @@ export function LoginView() {
             title="Acesse sua conta"
           />
 
-          <AppInput />
+          <AppInputController
+            control={control}
+            name="email"
+            label="E-MAIL"
+            leftIcon="mail-outline"
+            placeholder="mail@example.com.br"
+          />
+
+          <AppInputController
+            control={control}
+            name="password"
+            label="SENHA"
+            leftIcon="lock-closed-outline"
+            placeholder="Sua senha"
+          />
 
           <TouchableOpacity onPress={() => router.push('/register')}>
             <Text>Registro</Text>
