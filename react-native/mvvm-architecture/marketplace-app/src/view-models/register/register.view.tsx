@@ -1,10 +1,12 @@
-import { ScrollView, Text, TouchableOpacity } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useRegisterViewModel } from './use-register.view-model'
 import { AppInputController } from '@/shared/components/app-input-controller'
 import { AuthFormHeader } from '@/shared/components/auth-form-header'
 import { router } from 'expo-router'
 import { DismissKeyboardView } from '@/shared/components/dismiss-keyboard-view'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { AppButton } from '@/shared/components/app-button'
+import React from 'react'
 
 export function RegisterView({
   control,
@@ -63,13 +65,25 @@ export function RegisterView({
             placeholder="Confirme a senha"
           />
 
-          <TouchableOpacity onPress={onSubmit}>
-            <Text>Registrar</Text>
-          </TouchableOpacity>
+          <AppButton
+            title="Registrar"
+            className="mt-6"
+            rightIcon="arrow-forward"
+            onPress={onSubmit}
+          />
 
-          <TouchableOpacity onPress={() => router.push('/login')}>
-            <Text>Login</Text>
-          </TouchableOpacity>
+          <View className="mt-16">
+            <Text className="my-6 text-base text-gray-300">
+              Ainda não tem uma conta?
+            </Text>
+
+            <AppButton
+              title="Login"
+              variant="outlined"
+              rightIcon="arrow-forward"
+              onPress={() => router.push('/login')}
+            />
+          </View>
         </ScrollView>
       </DismissKeyboardView>
     </SafeAreaView>
