@@ -1,4 +1,4 @@
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useRegisterViewModel } from './use-register.view-model'
 import { AppInputController } from '@/shared/components/app-input-controller'
 import { AuthFormHeader } from '@/shared/components/auth-form-header'
@@ -7,19 +7,37 @@ import { DismissKeyboardView } from '@/shared/components/dismiss-keyboard-view'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AppButton } from '@/shared/components/app-button'
 import React from 'react'
+import { Ionicons } from '@expo/vector-icons'
 
 export function RegisterView({
   control,
   onSubmit,
+  avatarUri,
+  handleSelectAvatar,
 }: ReturnType<typeof useRegisterViewModel>) {
   return (
     <SafeAreaView className="flex-1">
       <DismissKeyboardView>
-        <ScrollView className="flex-1 px-10">
+        <ScrollView className="flex-1 px-[40px]">
           <AuthFormHeader
-            title="Acesse sua conta"
-            subTitle="Informe seu e-mail e senha"
+            title="Crie sua conta"
+            subTitle="Informe os seus dados pessoais e de acesso"
           />
+
+          <TouchableOpacity
+            className="mb-8 h-[120px] w-[120px] items-center justify-center self-center rounded-xl bg-shape"
+            onPress={handleSelectAvatar}
+          >
+            {avatarUri ? (
+              <Image
+                source={{ uri: avatarUri }}
+                className="h-full w-full rounded-xl"
+                resizeMode="cover"
+              />
+            ) : (
+              <Ionicons name="cloud-upload-outline" size={32} />
+            )}
+          </TouchableOpacity>
 
           <AppInputController
             leftIcon="person-outline"

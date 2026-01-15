@@ -24,7 +24,8 @@ export function AppButton({
   className,
   ...rest
 }: AppButtonProps) {
-  const contentColor = variant === 'filled' ? colors.white : colors['blue-base']
+  const contentColor =
+    variant === 'filled' ? colors.white : colors['purple-base']
 
   const styles = buttonVariants({
     hasIcon: !!leftIcon || !!rightIcon,

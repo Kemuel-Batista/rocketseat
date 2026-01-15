@@ -1,4 +1,7 @@
+import React from 'react'
+import { AppModal } from '@/shared/components/app-modal'
 import '../styles/global.css'
+import ToastManager from 'toastify-react-native'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { Stack } from 'expo-router'
@@ -11,8 +14,10 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
-        <Stack.Screen name="{private}" />
+        <Stack.Screen name="(private)" />
       </Stack>
+      <AppModal />
+      <ToastManager useModal={false} />
     </QueryClientProvider>
   )
 }

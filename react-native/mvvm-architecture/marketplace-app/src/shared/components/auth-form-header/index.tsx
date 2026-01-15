@@ -15,7 +15,7 @@ export function AuthFormHeader({ title, subTitle }: AuthFormHeaderProps) {
       />
 
       <Text className="mb-3 text-3xl font-bold text-gray-500">{title}</Text>
-      <Text className="text-base text-gray-300">{subTitle}</Text>
+      <Text className="text-center text-base text-gray-300">{subTitle}</Text>
     </View>
   )
 }
