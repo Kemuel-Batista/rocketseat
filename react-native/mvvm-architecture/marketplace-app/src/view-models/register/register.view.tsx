@@ -99,7 +99,7 @@ export function RegisterView({
               title="Login"
               variant="outlined"
               rightIcon="arrow-forward"
-              onPress={() => router.push('/login')}
+              onPress={() => router.push('/(public)/login')}
             />
           </View>
         </ScrollView>

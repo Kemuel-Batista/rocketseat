@@ -56,7 +56,7 @@ export function LoginView({
               title="Registro"
               variant="outlined"
               rightIcon="arrow-forward"
-              onPress={() => router.push('/register')}
+              onPress={() => router.push('/(public)/register')}
             />
           </View>
         </View>

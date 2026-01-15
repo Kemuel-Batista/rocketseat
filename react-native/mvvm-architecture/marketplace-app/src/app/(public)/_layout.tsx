@@ -1,12 +1,12 @@
 import { useUserStore } from '@/shared/store/user-store'
-import { Redirect } from 'expo-router'
+import { Redirect, Stack } from 'expo-router'
 
-export default function App() {
+export default function PublicLayout() {
   const { user, token } = useUserStore()
 
   if (user && token) {
     return <Redirect href="/(private)/home" />
   }
 
-  return <Redirect href="/(public)/login" />
+  return <Stack screenOptions={{ headerShown: false }} />
 }
