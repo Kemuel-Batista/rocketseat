@@ -3,9 +3,9 @@ import type { ProductRequest } from '../interfaces/http/product'
 import { ProductResponse } from '../interfaces/http/product-response'
 
 export async function getProducts(params: ProductRequest) {
-  const { data } = await marketPlaceAPIClient.get<ProductResponse>(
+  const { data } = await marketPlaceAPIClient.post<ProductResponse>(
     '/products',
-    { params },
+    params,
   )
   return data
 }

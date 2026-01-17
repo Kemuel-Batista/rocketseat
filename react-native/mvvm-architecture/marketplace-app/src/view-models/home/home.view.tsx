@@ -4,35 +4,19 @@ import { HomeHeader } from './components/header'
 import { SearchInput } from './components/search-input'
 import type { ProductInterface } from '@/shared/interfaces/product'
 import { ProductCard } from './components/product-card'
+import type { useHomeViewModel } from './use-home.view-model'
 
-export function HomeView() {
-  const productsList: ProductInterface[] = [
-    {
-      id: 1,
-      value: '100',
-      name: 'Product 1',
-      description: 'Description 1',
-      photo: 'https://via.placeholder.com/150',
-      height: '100',
-      width: '100',
-      weight: '100',
-      averageRating: 1,
-      views: 1,
-      ratingCount: 1,
-      categoryId: 1,
-      category: { id: 1, name: 'Category 1' },
-      createdAt: '2021-01-01',
-      updatedAt: '2021-01-01',
-      deletedAt: '2021-01-01',
-    },
-  ]
-
+export function HomeView({ products }: ReturnType<typeof useHomeViewModel>) {
   return (
     <SafeAreaView edges={['top']} className="flex-1">
       <FlatList
-        data={productsList}
+        data={products}
         renderItem={({ item }) => <ProductCard product={item} />}
         keyExtractor={({ id }) => `product-list-item-${id}`}
+        numColumns={2}
+        columnWrapperStyle={{
+          justifyContent: 'space-between',
+        }}
         ListHeaderComponent={() => (
           <>
             <HomeHeader />
