@@ -22,6 +22,10 @@ export function useHomeViewModel() {
     await refetch()
   }
 
+  const handleEndReached = () => {
+    handleLoadMore()
+  }
+
   console.log('Data:', JSON.stringify(products, null, 2))
   console.log('Error:', error)
   console.log('Is Loading:', isLoading)
@@ -29,5 +33,9 @@ export function useHomeViewModel() {
     handleLoadMore,
     handleRefresh,
     products,
+    handleEndReached,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
   }
 }

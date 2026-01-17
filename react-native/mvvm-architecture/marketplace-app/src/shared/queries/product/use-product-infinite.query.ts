@@ -32,6 +32,7 @@ export const useProductInfiniteQuery = () => {
     },
     initialPageParam: 1,
     queryKey: ['products'],
+    staleTime: 1000 * 60 * 60, // 1 hour
   })
 
   const products = data?.pages
