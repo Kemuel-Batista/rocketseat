@@ -9,6 +9,10 @@ import { AppInput } from '@/shared/components/app-input'
 export function FilterView({
   productCategories,
   isLoading,
+  handleValueMaxChange,
+  handleValueMinChange,
+  handleCategoryToggle,
+  selectedCategories,
 }: ReturnType<typeof useFilterViewModel>) {
   return (
     <View>
@@ -26,6 +30,7 @@ export function FilterView({
         <View className="mb-4 w-full flex-row">
           <View className="flex-1">
             <AppInput
+              onChangeText={(text) => handleValueMinChange(Number(text))}
               placeholder="De"
               keyboardType="numeric"
               containerClassName="w-[90%]"
@@ -33,6 +38,7 @@ export function FilterView({
           </View>
           <View className="flex-1">
             <AppInput
+              onChangeText={(text) => handleValueMaxChange(Number(text))}
               placeholder="Até"
               keyboardType="numeric"
               containerClassName="w-[90%]"
@@ -50,8 +56,11 @@ export function FilterView({
               <TouchableOpacity
                 className="flex-row items-center py-2"
                 key={`product-category-${id}`}
+                onPress={() => handleCategoryToggle(id)}
               >
                 <Checkbox
+                  value={selectedCategories.includes(id)}
+                  onValueChange={() => handleCategoryToggle(id)}
                   color={colors['purple-base']}
                   className="mr-3 rounded-full"
                 />
