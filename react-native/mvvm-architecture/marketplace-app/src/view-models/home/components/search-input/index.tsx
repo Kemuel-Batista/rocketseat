@@ -4,6 +4,7 @@ import { colors } from '@/styles/colors'
 import { Ionicons } from '@expo/vector-icons'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
+import { Filter } from '../filter'
 
 export function SearchInput() {
   const { open } = useBottomSheetStore()
@@ -21,7 +22,7 @@ export function SearchInput() {
         </View>
 
         <TouchableOpacity
-          onPress={() => open({ content: <Text>Hello</Text> })}
+          onPress={() => open({ content: <Filter /> })}
           className="ml-5 mt-6 size-[48px] items-center justify-center rounded-lg border border-purple-base"
         >
           <Ionicons
