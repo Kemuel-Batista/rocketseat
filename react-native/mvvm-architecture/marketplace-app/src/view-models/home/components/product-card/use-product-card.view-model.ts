@@ -7,7 +7,16 @@ interface UseProductCardViewModelParams {
 export function useProductCardViewModel({
   product,
 }: UseProductCardViewModelParams) {
-  return {
-    product,
+  const formatProductName = (name: string) => {
+    if (name.length > 17) {
+      return `${name.slice(0, 17)}...`
+    }
+
+    return name
   }
+
+  const displayName = formatProductName(product.name)
+  const formatRating = product.averageRating.toFixed(1)
+
+  return { product, displayName, formatRating }
 }
