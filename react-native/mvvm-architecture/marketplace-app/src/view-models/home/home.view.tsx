@@ -1,11 +1,11 @@
 import { FlatList, RefreshControl } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { HomeHeader } from './components/header'
-import { SearchInput } from './components/search-input'
 import { ProductCard } from './components/product-card'
 import type { useHomeViewModel } from './use-home.view-model'
 import { Footer } from './components/footer'
 import { colors } from '@/styles/colors'
+import React from 'react'
+import { RenderHeader } from './components/render-header'
 
 export function HomeView({
   products,
@@ -15,6 +15,8 @@ export function HomeView({
   isFetchingNextPage,
   handleRefresh,
   isRefetching,
+  searchInputText,
+  setSearchInputText,
 }: ReturnType<typeof useHomeViewModel>) {
   return (
     <SafeAreaView edges={['top']} className="flex-1">
@@ -32,12 +34,12 @@ export function HomeView({
         columnWrapperStyle={{
           justifyContent: 'space-between',
         }}
-        ListHeaderComponent={() => (
-          <>
-            <HomeHeader />
-            <SearchInput />
-          </>
-        )}
+        ListHeaderComponent={
+          <RenderHeader
+            searchInputText={searchInputText}
+            setSearchInputText={setSearchInputText}
+          />
+        }
         contentContainerClassName="px-[16px] pb-[120px]"
         refreshControl={
           <RefreshControl

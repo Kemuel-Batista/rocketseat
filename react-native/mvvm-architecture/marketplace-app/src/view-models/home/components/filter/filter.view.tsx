@@ -13,6 +13,8 @@ export function FilterView({
   handleValueMinChange,
   handleCategoryToggle,
   selectedCategories,
+  handleApplyFilters,
+  handleResetFilter,
 }: ReturnType<typeof useFilterViewModel>) {
   return (
     <View>
@@ -72,10 +74,14 @@ export function FilterView({
 
         <View className="mb-6 mt-4 flex-row gap-3">
           <View className="flex-1">
-            <AppButton title="Limpar filtro " variant="outlined" />
+            <AppButton
+              title="Limpar filtro"
+              variant="outlined"
+              onPress={handleResetFilter}
+            />
           </View>
           <View className="flex-1">
-            <AppButton title="Filtrar" />
+            <AppButton title="Filtrar" onPress={handleApplyFilters} />
           </View>
         </View>
       </View>

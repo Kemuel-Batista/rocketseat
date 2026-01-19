@@ -6,7 +6,15 @@ import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { Filter } from '../filter'
 
-export function SearchInput() {
+interface SearchInputProps {
+  inputValue: string
+  setSearchInputText: (text: string) => void
+}
+
+export function SearchInput({
+  inputValue,
+  setSearchInputText,
+}: SearchInputProps) {
   const { open } = useBottomSheetStore()
 
   return (
@@ -15,6 +23,9 @@ export function SearchInput() {
       <View className="flex-row">
         <View className="flex-1">
           <AppInput
+            value={inputValue}
+            onChangeText={setSearchInputText}
+            placeholder="Pesquisar"
             leftIcon="search"
             returnKeyType="search"
             className="flex-1 text-lg"
