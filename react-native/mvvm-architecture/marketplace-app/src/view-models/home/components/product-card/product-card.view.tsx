@@ -3,6 +3,8 @@ import type { useProductCardViewModel } from './use-product-card.view-model'
 import { Ionicons } from '@expo/vector-icons'
 import { colors } from '@/styles/colors'
 import { AppPriceText } from '@/shared/components/app-price-text'
+import { router } from 'expo-router'
+import { buildImageUrl } from '@/shared/helpers/build-image-url'
 
 export function ProductCardView({
   product,
@@ -10,10 +12,13 @@ export function ProductCardView({
   formatRating,
 }: ReturnType<typeof useProductCardViewModel>) {
   return (
-    <TouchableOpacity className="my-1 mb-2 h-[157px] w-[48%] overflow-hidden rounded-xl bg-white p-[4px] shadow-sm">
+    <TouchableOpacity
+      onPress={() => router.push(`/product/${product.id}`)}
+      className="my-1 mb-2 h-[157px] w-[48%] overflow-hidden rounded-xl bg-white p-[4px] shadow-sm"
+    >
       <View>
         <Image
-          source={{ uri: product.photo }}
+          source={{ uri: buildImageUrl(product.photo) }}
           className="h-[96px] w-full rounded-md"
           resizeMode="cover"
         />

@@ -41,7 +41,9 @@ export function AppButton({
 
     return (
       <>
-        {leftIcon && <Ionicons name={leftIcon} color={contentColor} />}
+        {leftIcon && (
+          <Ionicons name={leftIcon} color={contentColor} size={20} />
+        )}
         <Text className={styles.text()}>{title}</Text>
         {rightIcon && <Ionicons name={rightIcon} color={contentColor} />}
       </>
