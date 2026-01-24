@@ -21,6 +21,7 @@ export function ProductView({
   handleEndReached,
   isRefetching,
   isFetchingNextPage,
+  handleAddToCart,
 }: ReturnType<typeof useProductViewModel>) {
   if (error) return <ProductError />
 
@@ -40,7 +41,7 @@ export function ProductView({
         ListEmptyComponent={<EmptyList isLoadingComments={isLoadingComments} />}
         contentContainerClassName="pb-6"
       />
-      <AddToCardFooter product={productDetails} />
+      <AddToCardFooter product={productDetails} onAddToCart={handleAddToCart} />
     </SafeAreaView>
   )
 }

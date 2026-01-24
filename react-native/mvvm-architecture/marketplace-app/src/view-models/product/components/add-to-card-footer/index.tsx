@@ -5,9 +5,13 @@ import { View } from 'react-native'
 
 interface AddToCardFooterProps {
   product: ProductInterface
+  onAddToCart: () => void
 }
 
-export function AddToCardFooter({ product }: AddToCardFooterProps) {
+export function AddToCardFooter({
+  product,
+  onAddToCart,
+}: AddToCardFooterProps) {
   return (
     <View className="fixed bottom-0 left-0 right-0 h-[126px] flex-row items-center justify-between bg-white p-7">
       <AppPriceText value={Number(product.value)} />
@@ -16,6 +20,7 @@ export function AddToCardFooter({ product }: AddToCardFooterProps) {
         title="Adicionar"
         leftIcon="cart-outline"
         className="h-[40px] w-[120px]"
+        onPress={onAddToCart}
       />
     </View>
   )
