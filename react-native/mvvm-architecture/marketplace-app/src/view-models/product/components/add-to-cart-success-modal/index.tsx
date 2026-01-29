@@ -34,11 +34,7 @@ export function AddToCartSuccessModal({
       </Text>
 
       <View className="gap-3">
-        <AppButton
-          title="Ver carrinho"
-          leftIcon="cart-outline"
-          onPress={onGoToCart}
-        />
+        <AppButton title="Ver carrinho" onPress={onGoToCart} />
 
         <AppButton
           title="Continuar comprando"
