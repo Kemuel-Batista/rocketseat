@@ -10,7 +10,7 @@ export const buildImageUrl = (originalUrl: string) => {
     android: originalUrl.replace('localhost', '10.0.2.2'),
     ios: originalUrl.replace(
       'http://localhost:3001',
-      'https://5638cb7376e7.ngrok-free.app',
+      'https://da331d933967.ngrok-free.app',
     ),
   })
 }
