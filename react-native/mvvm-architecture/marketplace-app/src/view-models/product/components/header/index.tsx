@@ -8,9 +8,13 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 
 interface ProductHeaderProps {
   productDetails: GetProductDetailInterface
+  handleOpenReview: () => void
 }
 
-export function ProductHeader({ productDetails }: ProductHeaderProps) {
+export function ProductHeader({
+  productDetails,
+  handleOpenReview,
+}: ProductHeaderProps) {
   return (
     <>
       <View className="items-start pb-5">
@@ -96,7 +100,7 @@ export function ProductHeader({ productDetails }: ProductHeaderProps) {
         <View className="flex-row items-center justify-between border-t border-gray-200 pt-4">
           <Text className="text-base font-bold text-gray-800">Avaliações</Text>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleOpenReview}>
             <Text className="text-base font-medium text-purple-base">
               Avaliar
             </Text>

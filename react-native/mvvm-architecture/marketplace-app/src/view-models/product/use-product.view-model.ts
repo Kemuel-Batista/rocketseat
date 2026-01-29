@@ -5,6 +5,8 @@ import { useModalStore } from '@/shared/store/modal-store'
 import { createElement } from 'react'
 import { AddToCartSuccessModal } from './components/add-to-cart-success-modal'
 import { router } from 'expo-router'
+import { useBottomSheetStore } from '@/shared/store/bottom-sheet-store'
+import { ReviewBottomSheet } from './components/review-bottom-sheet'
 
 interface UseProductViewModelProps {
   productId: number
@@ -30,6 +32,7 @@ export function useProductViewModel({ productId }: UseProductViewModelProps) {
 
   const { addProduct } = useCartStore()
   const { open, close } = useModalStore()
+  const { open: openBottomSheet } = useBottomSheetStore()
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -77,6 +80,16 @@ export function useProductViewModel({ productId }: UseProductViewModelProps) {
     )
   }
 
+  const handleOpenReview = () => {
+    if (!productDetails) return
+
+    openBottomSheet({
+      content: createElement(ReviewBottomSheet, {
+        productId: productDetails.id,
+      }),
+    })
+  }
+
   return {
     isLoading,
     productDetails,
@@ -90,5 +103,6 @@ export function useProductViewModel({ productId }: UseProductViewModelProps) {
     isRefetching,
     isFetchingNextPage,
     handleAddToCart,
+    handleOpenReview,
   }
 }
