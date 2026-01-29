@@ -1,4 +1,4 @@
-import { buildImageUrl } from '@/shared/helpers/build-image-url'
+import { baseURL } from '@/shared/api/marketplace'
 import type { ProductComment } from '@/shared/interfaces/product-comment'
 import { getProductComments } from '@/shared/services/product.service'
 import { useInfiniteQuery } from '@tanstack/react-query'
@@ -28,7 +28,9 @@ export const useGetProductCommentsInfiniteQuery = (productId: number) => {
         user: {
           ...comment.user,
           avatar: {
-            url: buildImageUrl(comment.user.avatar?.url ?? '') ?? '',
+            url: comment.user.avatar.url
+              ? `${baseURL}${comment.user.avatar.url}`
+              : undefined,
           },
         },
       })) as ProductComment[]) ?? []

@@ -1,3 +1,4 @@
+import { buildImageUrl } from '@/shared/helpers/build-image-url'
 import type { ProductComment } from '@/shared/interfaces/product-comment'
 import { useUserStore } from '@/shared/store/user-store'
 import { colors } from '@/styles/colors'
@@ -22,7 +23,7 @@ export function CommentItem({ comment }: CommentItemProps) {
               <Image
                 className="h-full w-full"
                 resizeMode="cover"
-                source={{ uri: comment.user.avatar.url }}
+                source={{ uri: buildImageUrl(comment.user.avatar.url) }}
               />
             ) : (
               <View className="h-full w-full items-center justify-center">

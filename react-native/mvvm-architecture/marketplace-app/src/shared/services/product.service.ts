@@ -56,7 +56,15 @@ export async function createComment(params: CreateCommentRequest) {
 
 export async function getUserComment(productId: number) {
   const { data } = await marketPlaceAPIClient.get<{
-    content: string
+    comment: {
+      id: number
+      content: string
+      createdAt: Date
+      user: {
+        id: number
+        name: string
+      }
+    }
     rating: number
   }>(`/products/${productId}/user-comment`)
 
