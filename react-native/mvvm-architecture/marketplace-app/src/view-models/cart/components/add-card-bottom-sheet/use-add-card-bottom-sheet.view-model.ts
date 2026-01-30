@@ -3,6 +3,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { creditCardSchema, type CreditCardFormData } from './credit-card.schema'
 import { useBottomSheetStore } from '@/shared/store/bottom-sheet-store'
+import { useRef, useState } from 'react'
+
+export type FocusedField = 'number' | 'name' | 'expiry' | 'cvv'
 
 const formatExpirationDateFormApi = (
   dateString: string,
@@ -34,7 +37,10 @@ export function useAddCardBottomSheetViewModel() {
 
   const { close: closeBottomSheet } = useBottomSheetStore()
 
-  const { control, handleSubmit, reset, watch, clearErrors, setError } =
+  const [focusedField, setFocusedField] = useState<FocusedField | null>(null)
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const { control, handleSubmit, setError, watch } =
     useForm<CreditCardFormData>({
       resolver: zodResolver(creditCardSchema),
       defaultValues: {
@@ -53,13 +59,7 @@ export function useAddCardBottomSheetViewModel() {
       )
       const cleanedNumber = number.replace(/\D/g, '')
 
-      console.log({
-        expirationDate,
-        CVV,
-        cleanedNumber,
-      })
-
-      await createCreditCardMutation.mutate({
+      await createCreditCardMutation.mutateAsync({
         CVV: Number(CVV),
         expirationDate,
         number: cleanedNumber,
@@ -89,10 +89,39 @@ export function useAddCardBottomSheetViewModel() {
     return cleaned.replace(/(\d{4})(?=\d)/g, '$1 ').trim()
   }
 
+  const handleFieldFocus = (field: FocusedField) => {
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current)
+    }
+
+    setFocusedField(field)
+  }
+
+  const handleFieldBlur = () => {
+    blurTimeoutRef.current = setTimeout(() => {
+      setFocusedField(null)
+    }, 50)
+  }
+
+  const isFlipped = focusedField === 'cvv'
+
+  const watchedValues = watch()
+
   return {
     handleCreateCreditCard,
     control,
     expirationDateMask,
     cardNumberMask,
+    isFlipped,
+    handleFieldFocus,
+    handleFieldBlur,
+    focusedField,
+    cardData: {
+      number: watchedValues.number,
+      name: watchedValues.titularName,
+      expiry: watchedValues.expirationDate,
+      cvv: watchedValues.CVV,
+    },
+    closeBottomSheet,
   }
 }
