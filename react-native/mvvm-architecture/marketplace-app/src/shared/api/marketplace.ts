@@ -5,7 +5,7 @@ import { useUserStore } from '../store/user-store'
 
 function getBaseURL() {
   return Platform.select({
-    ios: 'https://9fee49af1f7f.ngrok-free.app',
+    ios: 'https://47157fab02b8.ngrok-free.app',
     android: 'http://10.0.2.2:3001',
   })
 }

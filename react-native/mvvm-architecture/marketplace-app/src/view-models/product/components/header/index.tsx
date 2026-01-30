@@ -1,4 +1,5 @@
 import { AppPriceText } from '@/shared/components/app-price-text'
+import { buildImageUrl } from '@/shared/helpers/build-image-url'
 import type { GetProductDetailInterface } from '@/shared/interfaces/http/product-detail'
 import { colors } from '@/styles/colors'
 import { Ionicons } from '@expo/vector-icons'
@@ -28,7 +29,7 @@ export function ProductHeader({
 
       <View className="w-full rounded-lg bg-white shadow-xl shadow-gray-500/30">
         <Image
-          source={{ uri: productDetails.photo }}
+          source={{ uri: buildImageUrl(productDetails.photo) }}
           className="h-[192px] w-full rounded-lg"
         />
 
