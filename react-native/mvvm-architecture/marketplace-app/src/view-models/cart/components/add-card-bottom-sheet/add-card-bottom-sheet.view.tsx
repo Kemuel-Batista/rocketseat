@@ -2,12 +2,15 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useAddCardBottomSheetViewModel } from './use-add-card-bottom-sheet.view-model'
 import { Ionicons } from '@expo/vector-icons'
 import { colors } from '@/styles/colors'
-import { AppInput } from '@/shared/components/app-input'
 import { AppButton } from '@/shared/components/app-button'
+import { AppInputController } from '@/shared/components/app-input-controller'
 
-export function AddCardBottomSheetView(
-  props: ReturnType<typeof useAddCardBottomSheetViewModel>,
-) {
+export function AddCardBottomSheetView({
+  handleCreateCreditCard,
+  control,
+  cardNumberMask,
+  expirationDateMask,
+}: ReturnType<typeof useAddCardBottomSheetViewModel>) {
   return (
     <ScrollView className="flex-1">
       <View className="p-8">
@@ -25,23 +28,40 @@ export function AddCardBottomSheetView(
         </View>
 
         <View className="mt-6 gap-4">
-          <AppInput
+          <AppInputController
+            control={control}
+            name="titularName"
             leftIcon="person-outline"
             label="NOME DO TITULAR"
             placeholder="Nome completo"
           />
+          <AppInputController
+            control={control}
+            name="number"
+            leftIcon="card-outline"
+            label="NÚMERO"
+            maxLength={19}
+            mask={cardNumberMask}
+            placeholder="Número do cartão"
+            keyboardType="numeric"
+          />
           <View className="flex-row gap-4">
             <View className="flex-1">
-              <AppInput
+              <AppInputController
+                control={control}
+                name="expirationDate"
                 leftIcon="calendar-outline"
                 label="VENCIMENTO"
-                placeholder="MM/AA"
-                keyboardType="numeric"
                 maxLength={5}
+                mask={expirationDateMask}
+                placeholder="MM/AA"
               />
             </View>
             <View className="flex-1">
-              <AppInput
+              <AppInputController
+                control={control}
+                name="CVV"
+                maxLength={3}
                 leftIcon="lock-closed-outline"
                 label="CVV"
                 placeholder="000"
@@ -56,7 +76,7 @@ export function AddCardBottomSheetView(
             <AppButton title="Cancelar" variant="outlined" />
           </View>
           <View className="flex-1">
-            <AppButton title="Salvar" />
+            <AppButton title="Salvar" onPress={handleCreateCreditCard} />
           </View>
         </View>
       </View>

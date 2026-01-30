@@ -10,9 +10,11 @@ import { CartFooter } from './components/cart-footer'
 export function CartView({
   products,
   openCartBottomSheet,
+  creditCards,
+  isLoadingCreditCards,
 }: ReturnType<typeof useCartViewModel>) {
   return (
-    <SafeAreaView>
+    <SafeAreaView className="flex-1">
       <FlatList
         contentContainerClassName="px-6"
         data={products}
@@ -22,7 +24,11 @@ export function CartView({
         ListHeaderComponent={<CartHeader />}
         ListFooterComponent={
           products.length > 0 ? (
-            <CartFooter openCartBottomSheet={openCartBottomSheet} />
+            <CartFooter
+              openCartBottomSheet={openCartBottomSheet}
+              creditCards={creditCards}
+              isLoadingCreditCards={isLoadingCreditCards}
+            />
           ) : undefined
         }
       />
