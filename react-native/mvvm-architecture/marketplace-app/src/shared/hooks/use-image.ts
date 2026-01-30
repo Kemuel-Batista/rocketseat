@@ -12,7 +12,7 @@ export function useImage({ callback, ...pickerOptions }: UseImageProps) {
   const { openCamera, isLoading: cameraLoading } = useCamera(pickerOptions)
   const { openGallery, isLoading: galleryLoading } = useGallery(pickerOptions)
 
-  const loading = Boolean(cameraLoading || galleryLoading)
+  const isLoading = Boolean(cameraLoading || galleryLoading)
 
   const { close } = useModalStore()
 
@@ -51,7 +51,7 @@ export function useImage({ callback, ...pickerOptions }: UseImageProps) {
   }
 
   return {
-    loading,
+    isLoading,
     handleSelectImage,
   }
 }

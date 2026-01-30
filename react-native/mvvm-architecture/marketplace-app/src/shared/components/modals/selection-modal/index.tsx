@@ -35,7 +35,7 @@ export function SelectionModal({
       </View>
 
       {message && (
-        <Text className="mb-6 text-base leading-6 text-gray-600">
+        <Text className="mb-6 text-center text-base leading-6 text-gray-600">
           {message}
         </Text>
       )}

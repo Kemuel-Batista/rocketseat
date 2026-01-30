@@ -1,6 +1,7 @@
 import { useUserStore } from '@/shared/store/user-store'
 import { colors } from '@/styles/colors'
 import { Ionicons } from '@expo/vector-icons'
+import { router } from 'expo-router'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 
 export function HomeHeader() {
@@ -8,7 +9,10 @@ export function HomeHeader() {
 
   return (
     <View>
-      <TouchableOpacity className="flex-row items-center gap-6">
+      <TouchableOpacity
+        onPress={() => router.push('/(private)/profile')}
+        className="flex-row items-center gap-6"
+      >
         <View className="relative">
           {user?.avatarUrl ? (
             <Image

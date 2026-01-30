@@ -6,8 +6,8 @@ import { AppButton } from '../../app-button'
 export interface SuccessModalProps {
   title: string
   message?: string
-  buttonText: string
-  onButtonPress: () => void
+  buttonText?: string
+  onButtonPress?: () => void
 }
 
 export function SuccessModal({
@@ -31,7 +31,7 @@ export function SuccessModal({
           {message}
         </Text>
 
-        <AppButton title={buttonText} onPress={onButtonPress} />
+        {buttonText && <AppButton title={buttonText} onPress={onButtonPress} />}
       </View>
     </View>
   )

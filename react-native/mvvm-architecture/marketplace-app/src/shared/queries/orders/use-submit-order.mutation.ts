@@ -8,7 +8,6 @@ export function useSubmitOrderMutation() {
   const mutation = useMutation({
     mutationFn: submitOrder,
     onSuccess: (response) => {
-      console.log(response.message)
       queryClient.invalidateQueries({ queryKey: ['user-orders'] })
     },
     onError: (error) => {
