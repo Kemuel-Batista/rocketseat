@@ -12,6 +12,7 @@ export function ReviewBottomSheetView({
   ratingForm,
   handleFormSubmit,
   isLoading,
+  closeBottomSheet,
 }: ReturnType<typeof useReviewBottomSheetViewModel>) {
   return (
     <View className="rounded-t-2xl bg-background">
@@ -19,7 +20,10 @@ export function ReviewBottomSheetView({
         <Text className="text-lg font-bold text-gray-900">
           {ratingForm.isEditing ? 'Editar avaliação' : 'Avaliar produto'}
         </Text>
-        <TouchableOpacity className="size-8 items-center justify-center rounded-[10px] border border-gray-400">
+        <TouchableOpacity
+          onPress={closeBottomSheet}
+          className="size-8 items-center justify-center rounded-[10px] border border-gray-400"
+        >
           <Ionicons name="close" size={24} color={colors.grays[400]} />
         </TouchableOpacity>
       </View>
@@ -62,13 +66,13 @@ export function ReviewBottomSheetView({
               title="Cancelar"
               variant="outlined"
               className="flex-1"
-              onPress={() => {}}
+              onPress={closeBottomSheet}
             />
 
             <AppButton
               title={ratingForm.isEditing ? 'Atualizar' : 'Enviar'}
               className="flex-1"
-              onPress={() => {}}
+              onPress={handleFormSubmit}
             />
           </View>
         </View>

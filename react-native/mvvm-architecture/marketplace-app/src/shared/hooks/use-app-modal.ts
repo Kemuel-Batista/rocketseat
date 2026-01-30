@@ -5,6 +5,10 @@ import {
   SelectionModal,
   type SelectionModalProps,
 } from '../components/modals/selection-modal'
+import {
+  SuccessModal,
+  type SuccessModalProps,
+} from '../components/modals/success-modal'
 
 export type SelectionVariant = 'primary' | 'secondary' | 'danger'
 
@@ -36,7 +40,22 @@ export function useAppModal() {
     )
   }
 
+  function showSuccess(config: SuccessModalProps) {
+    open(
+      createElement(SuccessModal, {
+        ...config,
+        onButtonPress: () => {
+          if (config.onButtonPress) {
+            config.onButtonPress()
+          }
+          close()
+        },
+      }),
+    )
+  }
+
   return {
     showSelection,
+    showSuccess,
   }
 }

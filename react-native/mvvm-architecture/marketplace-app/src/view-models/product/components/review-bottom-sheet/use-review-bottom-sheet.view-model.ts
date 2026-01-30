@@ -22,8 +22,7 @@ const initialRatingForm: RatingFormInterface = {
 export function useReviewBottomSheetViewModel(productId: number) {
   const [ratingForm, setRatingForm] =
     useState<RatingFormInterface>(initialRatingForm)
-  const { data: userComment, isLoading: isLoadingUserComment } =
-    useGetUserCommentQuery(productId)
+  const { data: userComment } = useGetUserCommentQuery(productId)
 
   const createCommentMutation = useCreateCommentMutation(productId)
   const updateCommentMutation = useUpdateCommentMutation(productId)
@@ -92,5 +91,6 @@ export function useReviewBottomSheetViewModel(productId: number) {
     ratingForm,
     handleFormSubmit,
     isLoading,
+    closeBottomSheet,
   }
 }

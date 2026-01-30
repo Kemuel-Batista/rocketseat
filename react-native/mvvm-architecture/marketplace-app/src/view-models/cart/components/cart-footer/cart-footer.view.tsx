@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native'
 import type { CartFooterProps } from '.'
-import type { useCartFooterViewModel } from './use-cart-footer.view-model'
+import { useCartFooterViewModel } from './use-cart-footer.view-model'
 import { AppPriceText } from '@/shared/components/app-price-text'
 import { Ionicons } from '@expo/vector-icons'
 import { colors } from '@/styles/colors'
@@ -23,6 +23,8 @@ export function CartFooterView({
   total,
   selectedCreditCard,
   setSelectedCreditCard,
+  submitOrderMutation,
+  isLoadingOrder,
 }: CartFooterViewProps) {
   return (
     <View className="mt-6 rounded-lg bg-white p-4">
@@ -80,7 +82,12 @@ export function CartFooterView({
           />
         )}
 
-        <AppButton title="Confirmar compra" className="mt-4" />
+        <AppButton
+          title="Confirmar compra"
+          className="mt-4"
+          onPress={submitOrderMutation}
+          isLoading={isLoadingOrder}
+        />
       </View>
     </View>
   )
