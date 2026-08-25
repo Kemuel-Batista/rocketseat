@@ -6,10 +6,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { Stack } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useNotifications } from '@/shared/hooks/use-notifications'
 
 const queryClient = new QueryClient()
 
 export default function RootLayout() {
+  useNotifications()
   return (
     <GestureHandlerRootView className="flex-1">
       <QueryClientProvider client={queryClient}>
