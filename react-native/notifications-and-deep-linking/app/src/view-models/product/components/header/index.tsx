@@ -5,6 +5,7 @@ import { colors } from '@/styles/colors'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { FavoriteButton } from './components/favorite-button'
 
 interface ProductHeaderProps {
   productDetails: GetProductDetailInterface
@@ -17,14 +18,15 @@ export function ProductHeader({
 }: ProductHeaderProps) {
   return (
     <>
-      <View className="items-start pb-5">
+      <View className="flex-row items-start justify-between pb-5">
         <TouchableOpacity
           onPress={router.back}
-          className="w-full flex-row items-center justify-start gap-3"
+          className="flex-row items-center justify-start gap-3"
         >
           <Ionicons name="arrow-back" size={24} color={colors['purple-base']} />
           <Text className="text-base text-purple-base">Voltar</Text>
         </TouchableOpacity>
+        <FavoriteButton productId={productDetails.id} />
       </View>
 
       <View className="w-full rounded-lg bg-white shadow-xl shadow-gray-500/30">
