@@ -9,6 +9,8 @@ const NOTIFICATION_IDS = {
   PURCHASE_FEEDBACK: 'purchase-feedback',
 }
 
+const DEEP_LINK = 'marketplace://'
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldPlaySound: true,
@@ -70,6 +72,7 @@ const scheduleCartReminder = async ({
       data: {
         type: 'cart_reminder',
         productId: String(productId),
+        deepLink: `${DEEP_LINK}cart`,
       },
     },
     trigger: {
@@ -99,6 +102,7 @@ const scheduleFeedbackNotification = async ({
       data: {
         type: 'purchase_feedback',
         productId: String(productId),
+        deepLink: `${DEEP_LINK}cart`,
       },
     },
     trigger: {
