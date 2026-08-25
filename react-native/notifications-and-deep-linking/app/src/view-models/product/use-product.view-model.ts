@@ -7,6 +7,7 @@ import { AddToCartSuccessModal } from './components/add-to-cart-success-modal'
 import { router } from 'expo-router'
 import { useBottomSheetStore } from '@/shared/store/bottom-sheet-store'
 import { ReviewBottomSheet } from './components/review-bottom-sheet'
+import { localNotificationsService } from '@/shared/services/local-notifications.service'
 
 interface UseProductViewModelProps {
   productId: number
@@ -68,6 +69,12 @@ export function useProductViewModel({ productId }: UseProductViewModelProps) {
       name: productDetails.name,
       price: productDetails.value,
       image: productDetails.photo,
+    })
+
+    localNotificationsService.scheduleCartReminder({
+      productName: productDetails.name,
+      productId: productDetails.id,
+      delayInMinutes: 30,
     })
 
     open(
