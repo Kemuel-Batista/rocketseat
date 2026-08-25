@@ -1,16 +1,15 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getProducts } from "../../services/product.service";
-import { FilterState } from "../../store/use-filter-store";
-import { BuildImageUrl } from "../../helpers/buildImageUrl";
-import { ProductInterface } from "../../interfaces/product";
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { getProducts } from '../../services/product.service'
+import { buildImageUrl } from '@/shared/helpers/build-image-url'
+import { FilterState } from '@/shared/store/use-filter-store'
 
-interface productsInfinityQueryParam {
-  filters?: FilterState;
+interface ProductsInfinityQueryParams {
+  filters?: FilterState
 }
 
-export const useProductIninityQuery = ({
+export const useProductInfinityQuery = ({
   filters,
-}: productsInfinityQueryParam) => {
+}: ProductsInfinityQueryParams) => {
   const {
     data,
     error,
@@ -29,34 +28,32 @@ export const useProductIninityQuery = ({
             perPage: 10,
           },
           filters: {
-            categoryIds: filters?.selectedCategories ?? [],
-            maxValue: filters?.valueMax ?? undefined,
+            categoryIds: filters?.selectedCategories || [],
             minValue: filters?.valueMin ?? undefined,
+            maxValue: filters?.valueMax ?? undefined,
             searchText: filters?.searchText ?? undefined,
           },
-        });
+        })
 
-        return response;
+        return response
       } catch (error) {
-        throw error;
+        throw error
       }
     },
     getNextPageParam: (lastPage) => {
-      return lastPage.page < lastPage.totalPages
-        ? lastPage.page + 1
-        : undefined;
+      return lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined
     },
     initialPageParam: 1,
-    queryKey: ["products", filters],
-    staleTime: 1000 * 60 * 1,
-  });
+    queryKey: ['products', filters],
+    staleTime: 1000 * 60 * 60, // 1 hour
+  })
 
   const products = data?.pages
     .flatMap((page) => page.data)
     .map((product) => ({
       ...product,
-      photo: BuildImageUrl(product.photo),
-    })) as ProductInterface[];
+      imageUrl: buildImageUrl(product.photo),
+    }))
 
   return {
     products,
@@ -67,5 +64,5 @@ export const useProductIninityQuery = ({
     isLoading,
     refetch,
     isRefetching,
-  };
-};
+  }
+}

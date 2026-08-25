@@ -1,77 +1,77 @@
-import { CartProduct, OmitedProductCart } from "../store/cart-store";
+import type { CartProduct, OmitedProductCart } from '../store/cart-store'
 
 export const cartService = {
   findExistingProduct: (productList: CartProduct[], productId: number) =>
     productList.some(({ id }) => id === productId),
-  addProdcutToCart: (
+  addProductToCart: (
     productList: CartProduct[],
-    newProduct: OmitedProductCart
+    newProduct: OmitedProductCart,
   ) => {
-    const existingProduct = cartService.findExistingProduct(
+    const existentProduct = cartService.findExistingProduct(
       productList,
-      newProduct.id
-    );
+      newProduct.id,
+    )
 
-    if (existingProduct) {
+    if (existentProduct) {
       const products = productList.map((product) => {
-        if (product.id == newProduct.id) {
-          return { ...product, quantity: product.quantity + 1 };
-        } else {
-          return product;
+        if (product.id === newProduct.id) {
+          return { ...product, quantity: product.quantity + 1 }
         }
-      });
+        return product
+      })
 
-      const total = cartService.calculateTotal(products);
+      const total = cartService.calculateTotal(products)
 
-      return { products, total };
+      return { products, total }
     }
-    const products = [...productList, { ...newProduct, quantity: 1 }];
-    const total = cartService.calculateTotal(products);
+
+    const products = [...productList, { ...newProduct, quantity: 1 }]
+    const total = cartService.calculateTotal(products)
+
     return {
       products,
       total,
-    };
+    }
   },
   calculateTotal: (productList: CartProduct[]) => {
     return productList.reduce((acc, product) => {
-      return acc + Number(product.price) * product.quantity;
-    }, 0);
+      return acc + Number(product.price) * product.quantity
+    }, 0)
   },
   removeProductFromList: (productList: CartProduct[], productId: number) => {
-    const products = productList.filter(({ id }) => id !== productId);
-    const total = cartService.calculateTotal(products);
+    const products = productList.filter(({ id }) => id !== productId)
+    const value = cartService.calculateTotal(products)
+
     return {
       products,
-      total,
-    };
+      total: value,
+    }
   },
-
   updateProductQuantity: ({
-    productId,
     productList,
+    productId,
     quantity,
   }: {
-    productList: CartProduct[];
-    productId: number;
-    quantity: number;
+    productList: CartProduct[]
+    productId: number
+    quantity: number
   }) => {
     if (quantity <= 0) {
-      return cartService.removeProductFromList(productList, productId);
+      return cartService.removeProductFromList(productList, productId)
     }
 
-    const products = productList.map((produt) => {
-      if (produt.id === productId) {
-        return { ...produt, quantity };
-      } else {
-        return produt;
+    const products = productList.map((product) => {
+      if (product.id === productId) {
+        return { ...product, quantity }
       }
-    });
 
-    return {
-      products,
-      total: cartService.calculateTotal(products),
-    };
+      return product
+    })
+
+    const total = cartService.calculateTotal(products)
+
+    return { products, total }
   },
   getItemCount: (productList: CartProduct[]) =>
     productList.reduce((acc, product) => acc + product.quantity, 0),
-};
+}

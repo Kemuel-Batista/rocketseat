@@ -1,29 +1,28 @@
-import { useMutation } from "@tanstack/react-query";
-import { updateUserProfile } from "../../services/profile.service";
-import { Toast } from "toastify-react-native";
-import { useUserStore } from "../../store/user-store";
-import { useAppModal } from "../../hooks/useAppModal";
+import { useAppModal } from '@/shared/hooks/use-app-modal'
+import { updateUserProfile } from '@/shared/services/profile.service'
+import { useUserStore } from '@/shared/store/user-store'
+import { useMutation } from '@tanstack/react-query'
+import { Toast } from 'toastify-react-native'
 
-export const useUpdateProfileMutation = () => {
-  const { updateUser } = useUserStore();
-  const { showSuccess } = useAppModal();
+export function useUpdateProfileMutation() {
+  const { updateUser } = useUserStore()
+  const { showSuccess } = useAppModal()
 
   const mutation = useMutation({
     mutationFn: updateUserProfile,
     onSuccess: (response) => {
-      updateUser({ ...response.user });
+      updateUser({
+        ...response.user,
+      })
       showSuccess({
-        title: "Sucesso!",
-        message: "Dados cadastrais atualizados com sucesso!",
-      });
+        title: 'Sucesso!',
+        message: 'Dados cadastrais atualizados com sucesso!',
+      })
     },
     onError: (error) => {
-      Toast.error(
-        error.message ?? "Falha ao atualizar os dados do usuário",
-        "top"
-      );
+      Toast.error(error.message ?? 'Falha ao atualizar os dados do usuário')
     },
-  });
+  })
 
-  return mutation;
-};
+  return mutation
+}

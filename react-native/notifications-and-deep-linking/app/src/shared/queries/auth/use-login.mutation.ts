@@ -1,22 +1,20 @@
-import { useMutation } from "@tanstack/react-query";
-import * as authService from "../../services/auths.service";
-import { LoginHttpParams } from "../../interfaces/http/login";
-import { useUserStore } from "../../store/user-store";
-import { Toast } from "toastify-react-native";
+import type { LoginHttpParams } from '@/shared/interfaces/http/login'
+import { login } from '@/shared/services/auth.service'
+import { useUserStore } from '@/shared/store/user-store'
+import { useMutation } from '@tanstack/react-query'
 
-export const useLoginMutation = () => {
-  const { setSession } = useUserStore();
+export function useLoginMutation() {
+  const { setSession } = useUserStore()
 
   const mutation = useMutation({
-    mutationFn: (userData: LoginHttpParams) => authService.login(userData),
+    mutationFn: (userData: LoginHttpParams) => login(userData),
     onSuccess: (response) => {
-      setSession(response);
+      setSession(response)
     },
     onError: (error) => {
-      console.log(error);
-      Toast.error(error.message ?? "Falha ao logar");
+      console.log(error)
     },
-  });
+  })
 
-  return mutation;
-};
+  return mutation
+}

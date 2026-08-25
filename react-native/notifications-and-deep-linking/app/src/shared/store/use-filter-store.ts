@@ -1,49 +1,50 @@
-import { create } from "zustand";
+import { create } from 'zustand'
 
 export interface FilterState {
-  valueMin: number | null;
-  valueMax: number | null;
-  selectedCategories: number[];
-  searchText: string;
+  valueMin: number | null
+  valueMax: number | null
+  selectedCategories: number[]
+  searchText: string
 }
 
 interface FilterStore {
-  appliedFilterState: FilterState;
-  filterState: FilterState;
-
+  appliedFilterState: FilterState
+  filterState: FilterState
   updateFilter: (props: {
-    key: keyof FilterState;
-    value: string | number | number[];
-  }) => void;
-  resetFilter: () => void;
-  applyFilters: () => void;
+    key: keyof FilterState
+    value: string | number | number[]
+  }) => void
+  resetFilter: () => void
+  applyFilters: () => void
 }
 
 const defaultFilterValues = {
-  searchText: "",
+  searchText: '',
   selectedCategories: [],
-  valueMax: null,
   valueMin: null,
-};
+  valueMax: null,
+}
 
 export const useFilterStore = create<FilterStore>((set) => ({
   appliedFilterState: defaultFilterValues,
   filterState: defaultFilterValues,
-
   updateFilter: ({ key, value }) => {
     set((state) => ({
-      filterState: { ...state.filterState, [key]: value },
-    }));
+      filterState: {
+        ...state.filterState,
+        [key]: value,
+      },
+    }))
   },
-
-  resetFilter: () =>
+  resetFilter: () => {
     set({
       appliedFilterState: defaultFilterValues,
       filterState: defaultFilterValues,
-    }),
-
-  applyFilters: () =>
+    })
+  },
+  applyFilters: () => {
     set((state) => ({
       appliedFilterState: state.filterState,
-    })),
-}));
+    }))
+  },
+}))

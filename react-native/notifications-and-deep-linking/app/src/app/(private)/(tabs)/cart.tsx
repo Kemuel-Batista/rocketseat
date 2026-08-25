@@ -1,8 +1,8 @@
-import { CartView } from "../../../viewModels/Cart/Cart.view";
-import { useCartViewModel } from "../../../viewModels/Cart/useCart.viewModel";
+import { CartView } from '@/view-models/cart/cart.view'
+import { useCartViewModel } from '@/view-models/cart/use-cart.view-model'
 
 export default function Cart() {
-  const viewModel = useCartViewModel();
+  const viewModel = useCartViewModel()
 
-  return <CartView {...viewModel} />;
+  return <CartView {...viewModel} />
 }

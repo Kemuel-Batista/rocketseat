@@ -1,7 +1,7 @@
-import { UserInterface } from "../user";
+import type { User } from '../user'
 
 export interface AuthResponse {
-  user: UserInterface;
-  token: string;
-  refreshToken: string;
+  user: User
+  token: string
+  refreshToken: string
 }

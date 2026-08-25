@@ -1,6 +1,6 @@
-import { OrderInterface } from "../order";
+import type { OrderInterface } from '../order'
 
 export interface GetOrdersResponse {
-  orders: OrderInterface[];
-  totalOrders: number;
+  orders: OrderInterface[]
+  totalOrders: number
 }

@@ -1,26 +1,26 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-import { cartService } from "../services/cart.service";
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
+import { cartService } from '../services/cart.service'
 
 export interface CartProduct {
-  id: number;
-  name: string;
-  price: string;
-  quantity: number;
-  image?: string;
+  id: number
+  name: string
+  price: string
+  quantity: number
+  image?: string
 }
 
-export type OmitedProductCart = Omit<CartProduct, "quantity">;
+export type OmitedProductCart = Omit<CartProduct, 'quantity'>
 
 interface CartStore {
-  products: CartProduct[];
-  total: number;
-  addProduct: (product: OmitedProductCart) => void;
-  removeProduct: (productId: number) => void;
-  updateQuantity: (params: { productId: number; quantity: number }) => void;
-  clearCart: () => void;
-  getItemCount: () => number;
+  products: CartProduct[]
+  total: number
+  addProduct: (product: OmitedProductCart) => void
+  removeProduct: (productId: number) => void
+  updateQuantity: (params: { productId: number; quantity: number }) => void
+  clearCart: () => void
+  getItemCount: () => number
 }
 
 export const useCartStore = create<CartStore>()(
@@ -28,29 +28,28 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       products: [],
       total: 0,
-
       addProduct: (newProduct) =>
         set((state) =>
-          cartService.addProdcutToCart(state.products, newProduct)
+          cartService.addProductToCart(state.products, newProduct),
         ),
-      clearCart: () => set({ products: [], total: 0 }),
-      getItemCount: () => cartService.getItemCount(get().products),
       removeProduct: (productId) =>
         set((state) =>
-          cartService.removeProductFromList(state.products, productId)
+          cartService.removeProductFromList(state.products, productId),
         ),
       updateQuantity: ({ productId, quantity }) =>
         set((state) =>
           cartService.updateProductQuantity({
+            productList: state.products,
             productId,
             quantity,
-            productList: state.products,
-          })
+          }),
         ),
+      clearCart: () => set({ products: [], total: 0 }),
+      getItemCount: () => cartService.getItemCount(get().products),
     }),
     {
-      name: "marketplace-cart",
+      name: 'marketplace-card',
       storage: createJSONStorage(() => AsyncStorage),
-    }
-  )
-);
+    },
+  ),
+)

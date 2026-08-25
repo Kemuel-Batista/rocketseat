@@ -1,21 +1,21 @@
-import { marketPlaceApiClient } from "../api/market-place";
-import { GetOrdersResponse } from "../interfaces/http/get-orders";
-import {
+import { marketPlaceAPIClient } from '../api/marketplace'
+import type { GetOrdersResponse } from '../interfaces/http/get-orders'
+import type {
   SubmitOrderRequestParamsInterface,
   SubmitOrderResponse,
-} from "../interfaces/http/submit-orders";
+} from '../interfaces/http/submit-orders'
 
-export const submitOrder = async (order: SubmitOrderRequestParamsInterface) => {
-  const { data } = await marketPlaceApiClient.post<SubmitOrderResponse>(
-    "/orders",
-    order
-  );
+export async function submitOrder(order: SubmitOrderRequestParamsInterface) {
+  const { data } = await marketPlaceAPIClient.post<SubmitOrderResponse>(
+    '/orders',
+    order,
+  )
 
-  return data;
-};
+  return data
+}
 
-export const getOrders = async () => {
-  const { data } = await marketPlaceApiClient.get<GetOrdersResponse>("/orders");
+export async function getOrders() {
+  const { data } = await marketPlaceAPIClient.get<GetOrdersResponse>('/orders')
 
-  return data;
-};
+  return data
+}

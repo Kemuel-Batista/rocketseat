@@ -1,87 +1,84 @@
-import { marketPlaceApiClient } from "../api/market-place";
-import {
-  CreateCommentResponse,
+import { marketPlaceAPIClient } from '../api/marketplace'
+import type {
   CreateCommentRequest,
-} from "../interfaces/http/create-comment";
-import { PaginatedResponse } from "../interfaces/http/paginated-response";
-import { ProductRequest } from "../interfaces/http/product";
-import { GetProductCommentsInterface } from "../interfaces/http/product-comments";
-import { GetProductDetailInterface } from "../interfaces/http/product-detail";
-import {
+  CreateCommentResponse,
+} from '../interfaces/http/create-comment'
+import type { PaginatedResponse } from '../interfaces/http/paginated-response'
+import type { ProductRequest } from '../interfaces/http/product'
+import type { GetProductCommentsInterface } from '../interfaces/http/product-comments'
+import type { GetProductDetailInterface } from '../interfaces/http/product-detail'
+import type {
   UpdateCommentRequest,
   UpdateCommentResponse,
-} from "../interfaces/http/update-comment";
-import { ProductCategory, ProductInterface } from "../interfaces/product";
-import { ProductComment } from "../interfaces/product-comment";
+} from '../interfaces/http/update-comment'
+import type { ProductCategory, ProductInterface } from '../interfaces/product'
+import type { ProductComment } from '../interfaces/product-comment'
 
-export const getProducts = async (params: ProductRequest) => {
-  const { data } = await marketPlaceApiClient.post<
+export async function getProducts(params: ProductRequest) {
+  const { data } = await marketPlaceAPIClient.post<
     PaginatedResponse<ProductInterface>
-  >("/products", params);
+  >('/products', params)
 
-  return data;
-};
+  return data
+}
 
-export const getProductsCategories = async () => {
-  const { data } = await marketPlaceApiClient.get<ProductCategory[]>(
-    "/products/categories"
-  );
+export async function getProductsCategories() {
+  const { data } = await marketPlaceAPIClient.get<ProductCategory[]>(
+    '/products/categories',
+  )
+  return data
+}
 
-  return data;
-};
+export async function getProductDetails(id: number) {
+  const { data } = await marketPlaceAPIClient.get<GetProductDetailInterface>(
+    `/products/${id}`,
+  )
 
-export const getProductDetail = async (id: number) => {
-  const { data } = await marketPlaceApiClient.get<GetProductDetailInterface>(
-    `/products/${id}`
-  );
+  return data
+}
 
-  return data;
-};
-
-export const getProductComments = async (
-  params: GetProductCommentsInterface
-) => {
-  const { data } = await marketPlaceApiClient.post<
+export async function getProductComments(params: GetProductCommentsInterface) {
+  const { data } = await marketPlaceAPIClient.post<
     PaginatedResponse<ProductComment>
-  >("/products/comments", params);
+  >('/products/comments', params)
 
-  return data;
-};
+  return data
+}
 
-export const createComment = async (params: CreateCommentRequest) => {
-  const { data } = await marketPlaceApiClient.post<CreateCommentResponse>(
-    "/products/create/comments",
-    params
-  );
+export async function createComment(params: CreateCommentRequest) {
+  const { data } = await marketPlaceAPIClient.post<CreateCommentResponse>(
+    '/products/create/comments',
+    params,
+  )
 
-  return data;
-};
+  return data
+}
 
-export const getUserComment = async (productId: number) => {
-  const { data } = await marketPlaceApiClient.get<{
+export async function getUserComment(productId: number) {
+  const { data } = await marketPlaceAPIClient.get<{
     comment: {
-      id: number;
-      content: string;
-      createdAt: Date;
+      id: number
+      content: string
+      createdAt: Date
       user: {
-        id: number;
-        name: string;
-      };
-    };
-    rating: number;
-  }>(`/products/${productId}/user-comment`);
+        id: number
+        name: string
+      }
+    }
+    rating: number
+  }>(`/products/${productId}/user-comment`)
 
-  return data;
-};
+  return data
+}
 
-export const updateUserComment = async (params: UpdateCommentRequest) => {
-  const { data } = await marketPlaceApiClient.put<UpdateCommentResponse>(
+export async function updateUserComment(params: UpdateCommentRequest) {
+  const { data } = await marketPlaceAPIClient.put<UpdateCommentResponse>(
     `/products/comments/${params.commentId}`,
     {
       content: params.content,
       rating: params.rating,
-    }
-  );
+    },
+  )
 
-  return data;
-};
+  return data
+}

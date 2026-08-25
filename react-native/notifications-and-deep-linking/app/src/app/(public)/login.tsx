@@ -1,8 +1,8 @@
-import { LoginView } from "../../viewModels/Login/Login.view";
-import { useLoginViewModel } from "../../viewModels/Login/useLogin.viewModel";
+import { LoginView } from '@/view-models/login/login.view'
+import { useLoginViewModel } from '@/view-models/login/use-login.view-model'
 
 export default function Login() {
-  const props = useLoginViewModel();
+  const props = useLoginViewModel()
 
-  return <LoginView {...props} />;
+  return <LoginView {...props} />
 }

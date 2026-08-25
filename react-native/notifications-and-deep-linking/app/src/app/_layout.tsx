@@ -1,10 +1,13 @@
-import { Stack } from "expo-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import "../styles/global.css";
-import { AppModal } from "../shared/components/AppModal";
-import ToastManager from "toastify-react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-const queryClient = new QueryClient();
+import React from 'react'
+import { AppModal } from '@/shared/components/app-modal'
+import '../styles/global.css'
+import ToastManager from 'toastify-react-native'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+import { Stack } from 'expo-router'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+
+const queryClient = new QueryClient()
 
 export default function RootLayout() {
   return (
@@ -18,5 +21,5 @@ export default function RootLayout() {
         <ToastManager useModal={false} />
       </QueryClientProvider>
     </GestureHandlerRootView>
-  );
+  )
 }

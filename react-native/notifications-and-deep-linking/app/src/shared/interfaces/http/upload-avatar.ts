@@ -1,5 +1,5 @@
 export interface UploadAvatarResponse {
-  message: string;
-  filename: string;
-  url: string;
+  message: string
+  filename: string
+  url: string
 }

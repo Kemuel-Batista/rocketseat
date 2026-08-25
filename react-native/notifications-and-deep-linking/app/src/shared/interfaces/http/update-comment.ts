@@ -1,16 +1,16 @@
 export interface UpdateCommentRequest {
-  content: string;
-  commentId: number;
-  rating: number;
+  content: string
+  commentId: number
+  rating: number
 }
 
 export interface UpdateCommentResponse {
-  message: string;
-  ratingUpdated: true;
+  message: string
+  ratingUpdated: boolean
   comment: {
-    id: number;
-    content: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+    id: number
+    content: string
+    createdAt: string
+    updatedAt: string
+  }
 }

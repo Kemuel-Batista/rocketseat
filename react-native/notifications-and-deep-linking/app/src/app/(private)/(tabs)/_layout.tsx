@@ -1,6 +1,6 @@
-import { Tabs } from "expo-router";
-import { colors } from "../../../styles/colors";
-import { Ionicons } from "@expo/vector-icons";
+import { colors } from '@/styles/colors'
+import { Ionicons } from '@expo/vector-icons'
+import { Tabs } from 'expo-router'
 
 export default function TabLayout() {
   return (
@@ -16,8 +16,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: "PRODUTOS",
-          tabBarActiveTintColor: colors["purple-base"],
+          title: 'PRODUTOS',
+          tabBarActiveTintColor: colors['purple-base'],
           tabBarIcon: ({ color }) => (
             <Ionicons color={color} name="storefront-outline" size={25} />
           ),
@@ -27,12 +27,11 @@ export default function TabLayout() {
           },
         }}
       />
-
       <Tabs.Screen
         name="orders"
         options={{
-          title: "PEDIDOS",
-          tabBarActiveTintColor: colors["purple-base"],
+          title: 'PEDIDOS',
+          tabBarActiveTintColor: colors['purple-base'],
           tabBarIcon: ({ color }) => (
             <Ionicons color={color} name="clipboard-outline" size={25} />
           ),
@@ -42,12 +41,11 @@ export default function TabLayout() {
           },
         }}
       />
-
       <Tabs.Screen
         name="cart"
         options={{
-          title: "CARRINHO",
-          tabBarActiveTintColor: colors["purple-base"],
+          title: 'CARRINHO',
+          tabBarActiveTintColor: colors['purple-base'],
           tabBarIcon: ({ color }) => (
             <Ionicons color={color} name="cart-outline" size={25} />
           ),
@@ -58,5 +56,5 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-  );
+  )
 }

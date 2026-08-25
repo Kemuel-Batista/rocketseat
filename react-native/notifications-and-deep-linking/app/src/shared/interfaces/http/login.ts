@@ -1,4 +1,4 @@
 export interface LoginHttpParams {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
