@@ -2,7 +2,7 @@ import { useGetProductCommentsInfiniteQuery } from '@/shared/queries/product/use
 import { useGetProductDetailsQuery } from '@/shared/queries/product/use-get-product-details'
 import { useCartStore } from '@/shared/store/cart-store'
 import { useModalStore } from '@/shared/store/modal-store'
-import { createElement } from 'react'
+import { createElement, useEffect } from 'react'
 import { AddToCartSuccessModal } from './components/add-to-cart-success-modal'
 import { router } from 'expo-router'
 import { useBottomSheetStore } from '@/shared/store/bottom-sheet-store'
@@ -11,9 +11,13 @@ import { localNotificationsService } from '@/shared/services/local-notifications
 
 interface UseProductViewModelProps {
   productId: number
+  openFeedbackBottomSheet?: boolean
 }
 
-export function useProductViewModel({ productId }: UseProductViewModelProps) {
+export function useProductViewModel({
+  productId,
+  openFeedbackBottomSheet,
+}: UseProductViewModelProps) {
   const {
     data: productDetails,
     isLoading,
@@ -96,6 +100,12 @@ export function useProductViewModel({ productId }: UseProductViewModelProps) {
       }),
     })
   }
+
+  useEffect(() => {
+    if (openFeedbackBottomSheet) {
+      handleOpenReview()
+    }
+  }, [openFeedbackBottomSheet, productDetails])
 
   return {
     isLoading,

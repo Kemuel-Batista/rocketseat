@@ -3,8 +3,15 @@ import { useProductViewModel } from '@/view-models/product/use-product.view-mode
 import { useLocalSearchParams } from 'expo-router'
 
 export default function Product() {
-  const { id } = useLocalSearchParams<{ id: string }>()
-  const viewModel = useProductViewModel({ productId: Number(id) })
+  const { id, openFeedbackBottomSheet } = useLocalSearchParams<{
+    id: string
+    openFeedbackBottomSheet?: string
+  }>()
+
+  const viewModel = useProductViewModel({
+    productId: Number(id),
+    openFeedbackBottomSheet: !!openFeedbackBottomSheet,
+  })
 
   return <ProductView {...viewModel} />
 }
