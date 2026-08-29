@@ -1,67 +1,88 @@
+import { useInputFocusAnimation } from '@/animations/hooks/use-input-focus-animation'
+import { usePressAnimation } from '@/animations/hooks/use-press-animation'
 import { colors, gradients } from '@/constants/colors'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FC } from 'react'
 import {
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import Animated from 'react-native-reanimated'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useAuthViewModel } from './use-auth.view-model'
+
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export const AuthView: FC<ReturnType<typeof useAuthViewModel>> = ({
   username,
   setUsername,
   handleSubmit,
 }) => {
+  const handleSubmitPressAnimation = usePressAnimation()
+  const animatedTextInputAnimation = useInputFocusAnimation()
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.logoContainer}>
-          <Image
-            style={styles.logo}
-            source={require('@/assets/logo.png')}
-            resizeMode="contain"
-          />
-        </View>
+    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.logo}
+              source={require('@/assets/logo.png')}
+              resizeMode="contain"
+            />
+          </View>
 
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>memory game</Text>
-          <Text style={styles.subtitle}>
-            Teste sua memória enquanto aprende!
-          </Text>
-        </View>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>memory game</Text>
+            <Text style={styles.subtitle}>
+              Teste sua memória enquanto aprende!
+            </Text>
+          </View>
 
-        <View style={styles.formContainer}>
-          <TextInput
-            value={username}
-            onChangeText={setUsername}
-            placeholder="Digite seu nome"
-            style={styles.input}
-            placeholderTextColor={colors.grayscale.gray300}
-            textAlign="center"
-            autoCapitalize="words"
-            returnKeyType="done"
-          />
+          <View style={styles.formContainer}>
+            <AnimatedTextInput
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Digite seu nome"
+              style={[styles.input, animatedTextInputAnimation.animatedStyle]}
+              textAlign="center"
+              autoCapitalize="words"
+              returnKeyType="done"
+              onFocus={animatedTextInputAnimation.onFocus}
+              onBlur={animatedTextInputAnimation.onBlur}
+              placeholderTextColor={colors.grayscale.gray300}
+            />
 
-          <View style={styles.buttonGlow}>
-            <LinearGradient
-              colors={gradients.colorful}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 2 }}
-              style={styles.buttonGradient}
-            >
-              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Entrar</Text>
-              </TouchableOpacity>
-            </LinearGradient>
+            <View style={styles.buttonGlow}>
+              <Animated.View style={handleSubmitPressAnimation.animatedStyle}>
+                <LinearGradient
+                  colors={gradients.colorful}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 2 }}
+                  style={styles.buttonGradient}
+                >
+                  <TouchableOpacity
+                    onPressIn={handleSubmitPressAnimation.onPressIn}
+                    onPressOut={handleSubmitPressAnimation.onPressOut}
+                    style={styles.button}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={styles.buttonText}>Entrar</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              </Animated.View>
+            </View>
           </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   )
 }
 
