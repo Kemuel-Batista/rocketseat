@@ -1,8 +1,8 @@
-import { AppText } from '@/components/app-text'
 import { HomeHeader } from '@/components/home-header'
 import { colors } from '@/constants/colors'
 import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { ChallengesList } from './components/challenges-list'
 import { DifficultySelectionView } from './components/difficulty-selection/difficulty-selecion.view'
 
 export function HomeView() {
@@ -11,7 +11,7 @@ export function HomeView() {
       <View style={styles.content}>
         <HomeHeader />
         <DifficultySelectionView />
-        <AppText>Home</AppText>
+        <ChallengesList />
       </View>
     </SafeAreaView>
   )
