@@ -1,5 +1,6 @@
 import { useInputFocusAnimation } from '@/animations/hooks/use-input-focus-animation'
 import { usePressAnimation } from '@/animations/hooks/use-press-animation'
+import { AppText } from '@/components/app-text'
 import { colors, gradients } from '@/constants/colors'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FC } from 'react'
@@ -40,10 +41,10 @@ export const AuthView: FC<ReturnType<typeof useAuthViewModel>> = ({
           </View>
 
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>memory game</Text>
-            <Text style={styles.subtitle}>
+            <AppText style={styles.title}>memory game</AppText>
+            <AppText style={styles.subtitle}>
               Teste sua memória enquanto aprende!
-            </Text>
+            </AppText>
           </View>
 
           <View style={styles.formContainer}>
@@ -113,10 +114,12 @@ const styles = StyleSheet.create({
     color: colors.grayscale.gray100,
     fontWeight: '800',
     marginBottom: 8,
+    fontFamily: 'Baloo2_800ExtraBold',
   },
   subtitle: {
     fontSize: 16,
     color: colors.grayscale.gray200,
+    fontFamily: 'Baloo2_800ExtraBold',
   },
   formContainer: {
     width: '100%',
@@ -152,5 +155,6 @@ const styles = StyleSheet.create({
     color: colors.grayscale.white,
     borderWidth: 1,
     borderColor: colors.grayscale.gray400,
+    fontFamily: 'Baloo2_400Regular',
   },
 })
