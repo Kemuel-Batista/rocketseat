@@ -24,7 +24,7 @@ export const HomeHeader = () => {
               Boas vindas, {user?.name}!
             </AppText>
             <AppText style={styles.subtitle}>
-              Comece a jogar selecionando os desafios abaixo
+              Comece a jogar selecionando os desafios abaixo!
             </AppText>
           </View>
         </View>
