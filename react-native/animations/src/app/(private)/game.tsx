@@ -8,7 +8,5 @@ export default function Game() {
     difficulty: Difficulty
   }>()
 
-  console.log(params)
-
   return <GameView />
 }

@@ -3,7 +3,6 @@ import { usePressAnimation } from '@/animations/hooks/use-press-animation'
 import { AppText } from '@/components/app-text'
 import { colors, gradients } from '@/constants/colors'
 import { LinearGradient } from 'expo-linear-gradient'
-import { FC } from 'react'
 import {
   Image,
   Keyboard,
@@ -20,11 +19,11 @@ import { useAuthViewModel } from './use-auth.view-model'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
-export const AuthView: FC<ReturnType<typeof useAuthViewModel>> = ({
+export function AuthView({
   username,
   setUsername,
   handleSubmit,
-}) => {
+}: ReturnType<typeof useAuthViewModel>) {
   const handleSubmitPressAnimation = usePressAnimation()
   const animatedTextInputAnimation = useInputFocusAnimation()
 

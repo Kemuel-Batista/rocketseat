@@ -1,11 +1,11 @@
 import { AppText } from '@/components/app-text'
-import { FC } from 'react'
 import { StyleSheet, View } from 'react-native'
 import type { useCountdownOverlayViewModel } from './use-countdown-overlay.view-model'
 
-export const CountdownOverlayView: FC<
-  ReturnType<typeof useCountdownOverlayViewModel>
-> = ({ count, visible }) => {
+export function CountdownOverlayView({
+  visible,
+  count,
+}: ReturnType<typeof useCountdownOverlayViewModel>) {
   if (!visible) return
 
   return (

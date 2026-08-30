@@ -47,7 +47,27 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const newState = GameService.resetMismatchedCards(currentState)
     set(newState)
   },
-  selectCard: (cardId: string) => {},
+  selectCard: (cardId: string) => {
+    const currentState = get()
+
+    const { action, newState } = GameService.selectCard(currentState, cardId)
+    set(newState)
+    console.log(action)
+    switch (action) {
+      case 'flip':
+        break
+      case 'invalid':
+        break
+      case 'mismatch':
+        setTimeout(() => get().resetMismatchedCards(), 1000)
+        break
+      case 'match':
+        if (newState.status === 'finished') {
+          setTimeout(() => get().finishGame(), 500)
+        }
+        break
+    }
+  },
   startGame: () => {
     const currentState = get()
     const newState = GameService.startGame(currentState)
