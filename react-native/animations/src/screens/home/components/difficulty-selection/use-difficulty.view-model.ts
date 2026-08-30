@@ -1,19 +1,20 @@
 import { useNumberAnimation } from '@/animations/hooks/use-number-animation'
 import { Difficulty } from '@/shared/interfaces/difficulty'
 import { difficultyConfigs } from '@/shared/utils/challenge'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
+import type { DifficultySelectionProps } from './difficulty-selecion.view'
 
 const difficulties: Difficulty[] = ['Fácil', 'Médio', 'Difícil']
 
-export const useDifficultyViewModel = () => {
-  const [selectedDifficulty, setSelectedDifficulty] =
-    useState<Difficulty>('Fácil')
-
+export function useDifficultyViewModel({
+  selectedDifficulty,
+  setSelectedDifficulty,
+}: DifficultySelectionProps) {
   const difficultyConfig = difficultyConfigs[selectedDifficulty]
 
   const { animatedStyle: timeAnimatedStyle } = useNumberAnimation(

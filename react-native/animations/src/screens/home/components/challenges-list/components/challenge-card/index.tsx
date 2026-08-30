@@ -7,13 +7,18 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
+type ChallengeCardProps = ChallengeTheme & {
+  handleSelectChallenge: (challengeId: string) => void
+}
+
 export function ChallengeCard({
   cards,
   id,
   title,
   gradient,
   arrowColor,
-}: ChallengeTheme) {
+  handleSelectChallenge,
+}: ChallengeCardProps) {
   const pressAnimation = usePressAnimation()
   return (
     <LinearGradient
@@ -27,6 +32,7 @@ export function ChallengeCard({
           onPressIn={pressAnimation.onPressIn}
           onPressOut={pressAnimation.onPressOut}
           style={styles.challengeContent}
+          onPress={() => handleSelectChallenge(id)}
         >
           <AppText style={styles.challengeTitle}>{title}</AppText>
           <View style={[styles.arrowButton, { backgroundColor: arrowColor }]}>

@@ -1,20 +1,27 @@
 import { AppText } from '@/components/app-text'
 import { colors } from '@/constants/colors'
+import type { Difficulty } from '@/shared/interfaces/difficulty'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { StyleSheet, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { DifficultyTab } from './difficulty-tab'
 import { useDifficultyViewModel } from './use-difficulty.view-model'
 
-export function DifficultySelectionView() {
+export interface DifficultySelectionProps {
+  selectedDifficulty: Difficulty
+  setSelectedDifficulty: (difficulty: Difficulty) => void
+}
+
+export function DifficultySelectionView({
+  selectedDifficulty,
+  setSelectedDifficulty,
+}: DifficultySelectionProps) {
   const {
     difficulties,
-    selectedDifficulty,
-    setSelectedDifficulty,
     animatedIndicatorStyle,
     difficultyConfig,
     timeAnimatedStyle,
-  } = useDifficultyViewModel()
+  } = useDifficultyViewModel({ selectedDifficulty, setSelectedDifficulty })
 
   return (
     <View style={styles.difficultySection}>

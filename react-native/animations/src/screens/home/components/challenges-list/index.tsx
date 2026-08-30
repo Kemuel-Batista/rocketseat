@@ -4,12 +4,20 @@ import { challengeTheme } from '@/shared/utils/challenge'
 import { StyleSheet, View } from 'react-native'
 import { ChallengeCard } from './components/challenge-card'
 
-export const ChallengesList = () => {
+interface ChallengesListProps {
+  handleSelectChallenge: (themeId: string) => void
+}
+
+export function ChallengesList({ handleSelectChallenge }: ChallengesListProps) {
   return (
     <View>
       <AppText style={styles.sectionTitle}>Desafios disponíveis</AppText>
       {challengeTheme.map((challenge) => (
-        <ChallengeCard {...challenge} key={`challenge-id-${challenge.id}`} />
+        <ChallengeCard
+          {...challenge}
+          handleSelectChallenge={handleSelectChallenge}
+          key={`challenge-id-${challenge.id}`}
+        />
       ))}
     </View>
   )
