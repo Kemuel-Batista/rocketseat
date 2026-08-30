@@ -12,20 +12,22 @@ export function DifficultySelectionView() {
     selectedDifficulty,
     setSelectedDifficulty,
     animatedIndicatorStyle,
+    difficultyConfig,
+    timeAnimatedStyle,
   } = useDifficultyViewModel()
 
   return (
     <View style={styles.difficultySection}>
       <View style={styles.difficultyHeader}>
         <AppText style={styles.difficultyLabel}>Dificuldade</AppText>
-        <View style={styles.timeIndicator}>
+        <Animated.View style={[styles.timeIndicator, timeAnimatedStyle]}>
           <MaterialCommunityIcons
             name="clock-outline"
             color={colors.feedback.info}
             size={16}
           />
-          <AppText>5 min</AppText>
-        </View>
+          <AppText>{difficultyConfig.estimatedTime}</AppText>
+        </Animated.View>
       </View>
 
       <View style={styles.difficultyTabs}>

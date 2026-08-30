@@ -1,4 +1,6 @@
+import { useNumberAnimation } from '@/animations/hooks/use-number-animation'
 import { Difficulty } from '@/shared/interfaces/difficulty'
+import { difficultyConfigs } from '@/shared/utils/challenge'
 import { useEffect, useState } from 'react'
 import {
   useAnimatedStyle,
@@ -6,11 +8,17 @@ import {
   withSpring,
 } from 'react-native-reanimated'
 
-export const useDifficultyViewModel = () => {
-  const difficulties: Difficulty[] = ['Fácil', 'Médio', 'Difícil']
+const difficulties: Difficulty[] = ['Fácil', 'Médio', 'Difícil']
 
+export const useDifficultyViewModel = () => {
   const [selectedDifficulty, setSelectedDifficulty] =
     useState<Difficulty>('Fácil')
+
+  const difficultyConfig = difficultyConfigs[selectedDifficulty]
+
+  const { animatedStyle: timeAnimatedStyle } = useNumberAnimation(
+    difficultyConfig.estimatedTime,
+  )
 
   const selectedIndex = difficulties.indexOf(selectedDifficulty)
   const translateX = useSharedValue(selectedIndex * 100)
@@ -21,7 +29,7 @@ export const useDifficultyViewModel = () => {
       damping: 30,
       stiffness: 120,
     })
-  }, [selectedDifficulty, difficulties, translateX])
+  }, [selectedDifficulty, translateX])
 
   const animatedIndicatorStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: `${translateX.value}%` }],
@@ -32,5 +40,7 @@ export const useDifficultyViewModel = () => {
     selectedDifficulty,
     setSelectedDifficulty,
     animatedIndicatorStyle,
+    timeAnimatedStyle,
+    difficultyConfig,
   }
 }
