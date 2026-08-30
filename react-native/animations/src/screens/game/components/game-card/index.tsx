@@ -7,8 +7,8 @@ interface GameCardProps {
   index: number
 }
 
-export function GameCard({ card }: GameCardProps) {
-  const viewModel = useGameCardViewModel({ card })
+export function GameCard({ card, index }: GameCardProps) {
+  const viewModel = useGameCardViewModel({ card, index })
 
   return <GameCardView {...viewModel} />
 }
