@@ -2,6 +2,7 @@ import { AppText } from '@/components/app-text'
 import { colors } from '@/constants/colors'
 import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { CardGrid } from './components/card-grid'
 import { CountdownOverlay } from './components/countdown-overlay'
 import { useGameViewModel } from './use-game.view-model'
 
@@ -16,6 +17,8 @@ export function GameView() {
         <AppText style={styles.subtitle}>
           Encontre todos os pares dentro do tempo!
         </AppText>
+
+        <CardGrid />
       </View>
 
       <CountdownOverlay
