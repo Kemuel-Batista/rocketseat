@@ -1,4 +1,5 @@
 import { colors } from '@/constants/colors'
+import { useRankingStore } from '@/shared/stores/ranking.store'
 import { FlatList, StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AnimatedHistoryCardView } from './components/animated-history-card/animated-history-card.view'
@@ -10,13 +11,19 @@ export function HistoryView({
   averageTime,
   totalGames,
 }: ReturnType<typeof useHistoryViewModel>) {
+  const { deleteScore } = useRankingStore()
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentContainer}>
         <FlatList
           data={matches}
           renderItem={({ item, index }) => (
-            <AnimatedHistoryCardView match={item} index={index} />
+            <AnimatedHistoryCardView
+              onDelete={() => deleteScore(item.id)}
+              match={item}
+              index={index}
+            />
           )}
           keyExtractor={({ id }) => `score-${id}`}
           style={{ width: '100%' }}
