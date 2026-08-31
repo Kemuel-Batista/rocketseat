@@ -88,14 +88,14 @@ export const styles = StyleSheet.create({
   indicator: {
     position: 'absolute',
     width: '33.33%',
-    top: 4,
+    top: 8,
     zIndex: 0,
     borderRadius: 100,
     left: 0,
-    bottom: 4,
+    bottom: 8,
     backgroundColor: colors.grayscale.gray500,
     borderColor: colors.grayscale.gray400,
     borderWidth: 1,
-    marginLeft: 4,
+    marginLeft: 8,
   },
 })

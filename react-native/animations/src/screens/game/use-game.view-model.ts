@@ -6,6 +6,7 @@ import {
 } from '@/animations/utils/animation.utils'
 import { Difficulty } from '@/shared/interfaces/difficulty'
 import { useGameStore } from '@/shared/stores/game.store'
+import { useRankingStore } from '@/shared/stores/ranking.store'
 import { challengeTheme, difficultyConfigs } from '@/shared/utils/challenge'
 import { createSequence } from '@/shared/utils/sequence.util'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -28,10 +29,14 @@ export function useGameViewModel() {
     clearGame,
     pauseGame,
     resumeGame,
+    timeElapsed,
+    challenge,
   } = useGameStore()
 
   const { entryAnimationType, setShouldAnimate, setEntryAnimationType } =
     useAnimationStore()
+
+  const { addScore } = useRankingStore()
 
   const [countdownVisible, setCountdownVisible] = useState(
     status === 'countdown',
@@ -119,6 +124,13 @@ export function useGameViewModel() {
   useEffect(() => {
     if (status === 'finished') {
       setShowVictoryModal(true)
+      if (challenge) {
+        addScore({
+          category: challenge.title,
+          difficulty: challenge.difficulty,
+          time: timeElapsed,
+        })
+      }
     }
     if (status === 'timeout') {
       createSequence()
@@ -126,7 +138,7 @@ export function useGameViewModel() {
         .then(() => setIsTimeoutModalVisible(true))
         .run()
     }
-  }, [status])
+  }, [addScore, challenge, status, timeElapsed])
 
   const handleTryAgain = useCallback(() => {
     setIsTimeoutModalVisible(false)
