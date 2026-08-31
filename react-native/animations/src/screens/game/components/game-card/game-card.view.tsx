@@ -1,3 +1,4 @@
+import { useCardSelectionAnimation } from '@/animations/hooks/use-card-selection-animation'
 import { AppText } from '@/components/app-text'
 import { colors, gradients } from '@/constants/colors'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -11,10 +12,33 @@ export function GameCardView({
   frontAnimatedStyle,
   selectCard,
   entry,
+  shakeAnimatedStyle,
+  successAnimatedStyle,
+  timeoutAnimatedStyle,
 }: ReturnType<typeof useGameCardViewModel>) {
+  const {
+    animatedStyle: selectionAnimatedStyle,
+    onPressIn,
+    onPressOut,
+  } = useCardSelectionAnimation()
+
   return (
-    <Animated.View style={[styles.containerWrapper, entry.animatedStyle]}>
-      <Pressable style={styles.container} onPress={() => selectCard(card.id)}>
+    <Animated.View
+      style={[
+        styles.containerWrapper,
+        entry.animatedStyle,
+        selectionAnimatedStyle,
+        shakeAnimatedStyle,
+        successAnimatedStyle,
+        timeoutAnimatedStyle,
+      ]}
+    >
+      <Pressable
+        style={styles.container}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
+        onPress={() => selectCard(card.id)}
+      >
         <Animated.View style={styles.innerContainer}>
           <Animated.View style={[styles.cardFace, frontAnimatedStyle]}>
             <LinearGradient
@@ -67,6 +91,9 @@ const styles = StyleSheet.create({
     backfaceVisibility: 'hidden',
     width: '100%',
     height: '100%',
+    borderColor: colors.grayscale.gray400,
+    borderWidth: 1,
+    borderRadius: 16,
   },
   cardGradient: {
     flex: 1,
