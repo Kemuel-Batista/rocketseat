@@ -1,6 +1,9 @@
 import type { CardEntryAnimationType } from '@/animations/config/animation.config'
 import { useAnimationStore } from '@/animations/store/animation.store'
-import { getEntryAnimationDuration } from '@/animations/utils/animation.utils'
+import {
+  getEntryAnimationDuration,
+  getFallAnimationDuration,
+} from '@/animations/utils/animation.utils'
 import { Difficulty } from '@/shared/interfaces/difficulty'
 import { useGameStore } from '@/shared/stores/game.store'
 import { challengeTheme, difficultyConfigs } from '@/shared/utils/challenge'
@@ -8,14 +11,24 @@ import { createSequence } from '@/shared/utils/sequence.util'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 
-export const useGameViewModel = () => {
+export function useGameViewModel() {
   const { themeId, difficulty } = useLocalSearchParams<{
     themeId: string
     difficulty: Difficulty
   }>()
 
-  const { initGame, status, previewAllCards, hideAllCards, startGame, cards } =
-    useGameStore()
+  const {
+    initGame,
+    status,
+    previewAllCards,
+    hideAllCards,
+    startGame,
+    cards,
+    resetGame,
+    clearGame,
+    pauseGame,
+    resumeGame,
+  } = useGameStore()
 
   const { entryAnimationType, setShouldAnimate, setEntryAnimationType } =
     useAnimationStore()
@@ -23,6 +36,7 @@ export const useGameViewModel = () => {
   const [countdownVisible, setCountdownVisible] = useState(
     status === 'countdown',
   )
+  const [isTimeoutModalVisible, setIsTimeoutModalVisible] = useState(false)
 
   const selectedTheme = challengeTheme.find((theme) => theme.id === themeId)
 
@@ -90,14 +104,77 @@ export const useGameViewModel = () => {
     themeId,
   ])
 
-  const handleGoBack = () => {
-    router.back()
+  const handleExit = useCallback(() => {
+    setIsTimeoutModalVisible(false)
+
+    createSequence()
+      .wait(200)
+      .then(() => router.replace('/(private)/home'))
+      .run()
+  }, [])
+
+  const [showExitModal, setShowExitModal] = useState(false)
+  const [showVictoryModal, setShowVictoryModal] = useState(false)
+
+  useEffect(() => {
+    if (status === 'finished') {
+      setShowVictoryModal(true)
+    }
+    if (status === 'timeout') {
+      createSequence()
+        .wait(getFallAnimationDuration())
+        .then(() => setIsTimeoutModalVisible(true))
+        .run()
+    }
+  }, [status])
+
+  const handleTryAgain = useCallback(() => {
+    setIsTimeoutModalVisible(false)
+    setShowVictoryModal(false)
+    setShouldAnimate(false)
+    resetGame()
+
+    createSequence()
+      .wait(300)
+      .then(() => setCountdownVisible(true))
+      .run()
+  }, [resetGame, setCountdownVisible, setShouldAnimate])
+
+  const handleGoHome = () => {
+    clearGame()
+    router.replace('/(private)/home')
   }
+
+  const handleOpenExitModal = () => {
+    if (status === 'playing') {
+      pauseGame()
+      setShowExitModal(true)
+    }
+  }
+
+  const handleConfirmExit = useCallback(() => {
+    setShowExitModal(false)
+    resetGame()
+    router.replace('/(private)/home')
+  }, [resetGame])
+
+  const handleCancelExit = useCallback(() => {
+    resumeGame()
+    setShowExitModal(false)
+  }, [resumeGame])
 
   return {
     selectedTheme,
     countdownVisible,
     handleCountdownComplete,
-    handleGoBack,
+    isTimeoutModalVisible,
+    handleTryAgain,
+    handleExit,
+    handleGoHome,
+    showExitModal,
+    handleOpenExitModal,
+    handleConfirmExit,
+    handleCancelExit,
+    showVictoryModal,
   }
 }

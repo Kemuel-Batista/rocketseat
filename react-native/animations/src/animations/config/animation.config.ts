@@ -26,6 +26,12 @@ export const SPRING_CONFIG = {
     damping: 22,
     stiffness: 300,
   } as WithSpringConfig,
+
+  modal: {
+    damping: 25,
+    stiffness: 120,
+    mass: 1,
+  } as WithSpringConfig,
 }
 
 export type CardEntryAnimationType = 'throw' | 'deck'
@@ -51,6 +57,13 @@ export const ANIMATION_TIMINGS: AnimationTimings = {
       duration: 350,
       delayBetweenCards: 40,
     },
+  },
+  fall: {
+    duration: 600,
+    rotation: 300,
+    opacityDuration: 200,
+    opacityDelay: 400,
+    maxRandomDelay: 200,
   },
 }
 

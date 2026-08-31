@@ -22,18 +22,22 @@ export function useGameCardViewModel({ card, index }: Props) {
 
   const { selectCard, status } = useGameStore()
 
-  const entry = useCardEntryAnimation({ cardIndex: index })
-
-  const { animatedStyle: shakeAnimatedStyle, onShake } = useCardShakeAnimation()
-
   const {
     animatedStyle: successAnimatedStyle,
     playSuccessAnimation,
     fadeOutSuccessAnimation,
+    resetAnimation: resetCardSuccessAnimation,
   } = useCardSuccessAnimation()
 
-  const { animatedStyle: timeoutAnimatedStyle, fallAnimation } =
-    useCardTimeoutAnimation()
+  const {
+    animatedStyle: timeoutAnimatedStyle,
+    fallAnimation,
+    resetAnimation: resetCardTimeoutAnimation,
+  } = useCardTimeoutAnimation()
+
+  const entry = useCardEntryAnimation({ cardIndex: index })
+
+  const { animatedStyle: shakeAnimatedStyle, onShake } = useCardShakeAnimation()
 
   const previousFlippedRef = useRef(card.isFlipped)
 
@@ -77,7 +81,18 @@ export function useGameCardViewModel({ card, index }: Props) {
       const randomDelay = Math.random() * 200
       fallAnimation(randomDelay)
     }
-  }, [status, card.isMatched, fallAnimation])
+
+    if (status === 'countdown') {
+      resetCardSuccessAnimation()
+      resetCardTimeoutAnimation()
+    }
+  }, [
+    status,
+    card.isMatched,
+    fallAnimation,
+    resetCardSuccessAnimation,
+    resetCardTimeoutAnimation,
+  ])
 
   return {
     card,

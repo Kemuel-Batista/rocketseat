@@ -8,4 +8,11 @@ export interface AnimationTimings {
       delayBetweenCards: number
     }
   >
+  fall: {
+    duration: number
+    rotation: number
+    opacityDuration: number
+    opacityDelay: number
+    maxRandomDelay: number
+  }
 }

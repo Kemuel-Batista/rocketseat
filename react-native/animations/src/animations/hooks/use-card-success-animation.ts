@@ -22,10 +22,20 @@ export const useCardSuccessAnimation = () => {
     scale.value = withTiming(0.8, { duration: 300 })
   }, [opacity, scale])
 
+  const resetAnimation = useCallback(() => {
+    scale.value = 1
+    opacity.value = 1
+  }, [opacity, scale])
+
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
     opacity: opacity.value,
   }))
 
-  return { animatedStyle, playSuccessAnimation, fadeOutSuccessAnimation }
+  return {
+    animatedStyle,
+    playSuccessAnimation,
+    fadeOutSuccessAnimation,
+    resetAnimation,
+  }
 }

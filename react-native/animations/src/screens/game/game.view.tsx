@@ -4,7 +4,10 @@ import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { CardGrid } from './components/card-grid'
 import { CountdownOverlay } from './components/countdown-overlay'
+import { DefeatModalView } from './components/defeat-modal/defeat-modal.view'
+import { ExitConfirmationModalView } from './components/exit-confirmation-modal/exit-confirmation-modal.view'
 import { GameHeaderView } from './components/game-header/game-header.view'
+import { VictoryModalView } from './components/victory-modal/victory-modal.view'
 import { useGameViewModel } from './use-game.view-model'
 
 export function GameView() {
@@ -12,12 +15,19 @@ export function GameView() {
     selectedTheme,
     countdownVisible,
     handleCountdownComplete,
-    handleGoBack,
+    isTimeoutModalVisible,
+    handleTryAgain,
+    handleGoHome,
+    showExitModal,
+    handleOpenExitModal,
+    handleConfirmExit,
+    handleCancelExit,
+    showVictoryModal,
   } = useGameViewModel()
 
   return (
     <SafeAreaView style={styles.container}>
-      <GameHeaderView onGoBack={handleGoBack} />
+      <GameHeaderView onGoBack={handleOpenExitModal} />
 
       <View style={styles.gameInfo}>
         <AppText style={styles.title}>{selectedTheme?.title}</AppText>
@@ -31,6 +41,24 @@ export function GameView() {
       <CountdownOverlay
         countdownVisible={countdownVisible}
         onComplete={handleCountdownComplete}
+      />
+
+      <DefeatModalView
+        visible={isTimeoutModalVisible}
+        onTryAgain={handleTryAgain}
+        onGoHome={handleGoHome}
+      />
+
+      <ExitConfirmationModalView
+        visible={showExitModal}
+        onConfirm={handleConfirmExit}
+        onCancel={handleCancelExit}
+      />
+
+      <VictoryModalView
+        visible={showVictoryModal}
+        onPlayAgain={handleTryAgain}
+        onGoHistory={handleConfirmExit}
       />
     </SafeAreaView>
   )
