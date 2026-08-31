@@ -2,6 +2,7 @@ import { usePressAnimation } from '@/animations/hooks/use-press-animation'
 import { colors } from '@/constants/colors'
 import { useAuthStore } from '@/shared/stores/auth.store'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { router } from 'expo-router'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { AppText } from '../app-text'
@@ -33,6 +34,7 @@ export const HomeHeader = () => {
             style={[styles.trophyContainer, pressAnimatedStyle.animatedStyle]}
             onPressIn={pressAnimatedStyle.onPressIn}
             onPressOut={pressAnimatedStyle.onPressOut}
+            onPress={() => router.push('/history')}
           >
             <MaterialCommunityIcons
               name="trophy-outline"
@@ -78,6 +80,6 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.grayscale.gray450,
+    backgroundColor: colors.grayscale.gray500,
   },
 })

@@ -52,7 +52,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     const { action, newState } = GameService.selectCard(currentState, cardId)
     set(newState)
-    console.log(action)
     switch (action) {
       case 'flip':
         break
