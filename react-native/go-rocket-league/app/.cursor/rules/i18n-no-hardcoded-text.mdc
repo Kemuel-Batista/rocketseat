@@ -1,0 +1,44 @@
+---
+description: Nunca usar textos hardcoded; sempre i18n com chaves em en, pt e es.
+globs: "**/*.{ts,tsx}"
+alwaysApply: true
+---
+
+# Textos: sempre i18n (en, pt, es)
+
+Neste aplicativo **não** usar textos visíveis ao usuário hardcoded. Sempre usar o sistema de tradução i18n.
+
+## Regras
+
+1. **Nunca** colocar strings literais em UI (labels, títulos, mensagens, placeholders, botões, acessibilidade, etc.) em componentes ou telas.
+2. **Sempre** usar a função `t` de `@/i18n` com uma chave de tradução:
+   - `import { t } from '@/i18n';`
+   - Exemplo: `t('collection.myCollection')`, `t('common.back')`.
+3. **Sempre** que criar uma chave nova, adicionar a tradução nos **três** idiomas em `i18n/locales/`:
+   - `i18n/locales/en.json` (inglês)
+   - `i18n/locales/pt.json` (português)
+   - `i18n/locales/es.json` (espanhol)
+4. Usar chaves aninhadas por contexto (ex.: `collection.myCollection`, `onboarding.skip`, `common.close`).
+5. Para interpolação use o formato do i18n-js: `t('key', { name: value })` e no JSON: `"message": "Hello {{name}}"`.
+
+## Exemplos
+
+```tsx
+// ❌ Evitar
+<Text>Minha Coleção</Text>
+<Text>Voltar</Text>
+placeholder="Buscar jogadores..."
+
+// ✅ Correto
+import { t } from '@/i18n';
+<Text>{t('collection.myCollection')}</Text>
+<Text>{t('common.back')}</Text>
+placeholder={t('cards.searchPlayers')}
+```
+
+Ao adicionar uma nova chave (ex.: `profile.editPhoto`):
+1. Inserir em `i18n/locales/en.json` na seção correspondente.
+2. Inserir a mesma chave em `i18n/locales/pt.json` com o texto em português.
+3. Inserir a mesma chave em `i18n/locales/es.json` com o texto em espanhol.
+
+Exceções: valores que vêm de API/backend, números/formatos puramente numéricos e identificadores técnicos (ex.: `testID`) podem permanecer sem i18n.

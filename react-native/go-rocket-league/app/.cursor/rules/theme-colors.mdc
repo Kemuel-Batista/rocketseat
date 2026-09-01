@@ -1,0 +1,37 @@
+---
+description: Usar sempre cores do theme; nunca hardcode. Se a cor não existir, criar em theme/colors com nome semântico.
+globs: "**/*.{ts,tsx}"
+alwaysApply: true
+---
+
+# Cores: theme/colors apenas
+
+Ao escrever código para este aplicativo:
+
+1. **Nunca** usar cores hardcoded (hex, rgb, rgba, nomes como `'white'`, `'#fff'` etc.) em componentes, telas ou estilos.
+2. **Sempre** usar cores do tema:
+   - Importar de `@/theme` (`colors`) ou de `@/constants/theme` (`Colors`).
+   - Em componentes: `import { colors } from '@/theme'` e usar `colors.nomeSemantico`.
+3. **Se a cor não existir** em `theme/colors.ts`:
+   - Adicionar em `theme/colors.ts` na seção apropriada (surfaces, text, primary, etc.).
+   - Nome **semântico** conforme o uso no componente (ex.: `toastSuccessBg`, `cardHighlightBorder`, `buttonDestructiveHover`).
+   - Usar `palette` para valores brutos quando fizer sentido (ex.: `slate[800]`, `cyan[500]`).
+   - Manter o padrão: `colors` para uso da app, `palette` para escalas.
+
+## Exemplos
+
+```tsx
+// ❌ Evitar
+<View style={{ backgroundColor: '#0f172a' }} />
+<Text style={{ color: '#22d3ee' }} />
+
+// ✅ Correto
+import { colors } from '@/theme';
+<View style={{ backgroundColor: colors.card }} />
+<Text style={{ color: colors.primaryLight }} />
+```
+
+Se precisar de uma cor nova (ex. borda de destaque em um card):
+1. Abrir `theme/colors.ts`.
+2. Adicionar algo como `cardHighlightBorder: slate[700]` ou usando `palette`.
+3. Usar `colors.cardHighlightBorder` no componente.
