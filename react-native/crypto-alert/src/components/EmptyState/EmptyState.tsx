@@ -10,7 +10,12 @@ interface EmptyStateProps {
   action?: ReactNode;
 }
 
-export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+}: EmptyStateProps) {
   const { titleId } = useEmptyState();
 
   return (
@@ -26,7 +31,9 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
       {description ? (
         <Text style={emptyStateStyles.description}>{description}</Text>
       ) : null}
-      {action ? <View style={emptyStateStyles.actionWrap}>{action}</View> : null}
+      {action ? (
+        <View style={emptyStateStyles.actionWrap}>{action}</View>
+      ) : null}
     </View>
   );
 }
