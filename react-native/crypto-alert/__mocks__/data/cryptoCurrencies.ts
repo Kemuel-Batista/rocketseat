@@ -3,7 +3,7 @@ export const cryptoCurrenciesMock = [
     id: "bitcoin",
     name: "Bitcoin",
     symbol: "BTC",
-    price: 67999.5,
+    price: 70999.5,
     change24h: 2.45,
     image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1747033579",
   },
@@ -24,3 +24,11 @@ export const cryptoCurrenciesMock = [
     image: "https://assets.coingecko.com/coins/images/975/large/cardano.png?1747033579",
   },
 ]
+
+export const fiatCurrenciesMock = [
+  { code: "USD", symbol: "$", rate: 1 },
+  { code: "BRL", symbol: "R$", rate: 5.5 },
+  { code: "EUR", symbol: "€", rate: 0.92 },
+  { code: "GBP", symbol: "£", rate: 0.79 },
+  { code: "JPY", symbol: "¥", rate: 149.5 },
+];
