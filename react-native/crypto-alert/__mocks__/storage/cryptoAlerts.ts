@@ -1,6 +1,6 @@
 import { PriceAlert } from "@/context/AlertProvider/useAlertProvider";
 
-export const cryptoAlerts: PriceAlert[] = [
+export const cryptoAlertsMock: PriceAlert[] = [
   {
     id: "1",
     cryptocurrency: "Bitcoin",
