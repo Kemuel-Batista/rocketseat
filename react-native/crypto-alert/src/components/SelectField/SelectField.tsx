@@ -1,12 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import {
-  FlatList,
-  Modal,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
 import { colors } from "@theme/colors";
+import { FlatList, Modal, Pressable, Text, View } from "react-native";
+import { EmptyState } from "../EmptyState/EmptyState";
 import { selectFieldStyles } from "./SelectField.styles";
 import type { SelectOption } from "./useSelectField";
 import { useSelectField } from "./useSelectField";
@@ -26,9 +21,8 @@ export function SelectField({
   value,
   onChange,
 }: SelectFieldProps) {
-  const { modalVisible, open, close, displayLabel, selectItem } = useSelectField(
-    { options, value, onChange },
-  );
+  const { modalVisible, open, close, displayLabel, selectItem } =
+    useSelectField({ options, value, onChange });
 
   return (
     <View>
@@ -48,7 +42,11 @@ export function SelectField({
           >
             {value ? displayLabel : placeholder}
           </Text>
-          <Ionicons name="chevron-down" size={22} color={colors.textSecondary} />
+          <Ionicons
+            name="chevron-down"
+            size={22}
+            color={colors.textSecondary}
+          />
         </View>
       </Pressable>
 
@@ -57,6 +55,7 @@ export function SelectField({
         animationType="slide"
         transparent
         onRequestClose={close}
+        testID="select-field-modal"
       >
         <View style={selectFieldStyles.modalRoot}>
           <Pressable
@@ -65,30 +64,46 @@ export function SelectField({
             accessibilityLabel="Close"
           />
           <View style={selectFieldStyles.modalSheet}>
-          <Text style={selectFieldStyles.modalTitle}>{label}</Text>
-          <FlatList
-            style={selectFieldStyles.optionList}
-            data={options}
-            keyExtractor={(item) => item.value}
-            renderItem={({ item }) => (
-              <Pressable
-                onPress={() => selectItem(item.value)}
-                style={[
-                  selectFieldStyles.optionRow,
-                  item.value === value
-                    ? selectFieldStyles.optionRowSelected
-                    : null,
-                ]}
-              >
-                <Text style={selectFieldStyles.optionTitle}>{item.title}</Text>
-                {item.subtitle ? (
-                  <Text style={selectFieldStyles.optionSubtitle}>
-                    {item.subtitle}
+            <Text style={selectFieldStyles.modalTitle}>{label}</Text>
+            <FlatList
+              style={selectFieldStyles.optionList}
+              data={options}
+              testID="select-field-list"
+              keyExtractor={(item) => item.value}
+              ListEmptyComponent={
+                <EmptyState
+                  icon={
+                    <Ionicons
+                      name="search"
+                      size={32}
+                      color={colors.iconMuted}
+                    />
+                  }
+                  title="No options found"
+                  description="There are no options to display at the moment."
+                />
+              }
+              renderItem={({ item }) => (
+                <Pressable
+                  onPress={() => selectItem(item.value)}
+                  style={[
+                    selectFieldStyles.optionRow,
+                    item.value === value
+                      ? selectFieldStyles.optionRowSelected
+                      : null,
+                  ]}
+                >
+                  <Text style={selectFieldStyles.optionTitle}>
+                    {item.title}
                   </Text>
-                ) : null}
-              </Pressable>
-            )}
-          />
+                  {item.subtitle ? (
+                    <Text style={selectFieldStyles.optionSubtitle}>
+                      {item.subtitle}
+                    </Text>
+                  ) : null}
+                </Pressable>
+              )}
+            />
           </View>
         </View>
       </Modal>
