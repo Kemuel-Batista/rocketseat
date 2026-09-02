@@ -18,6 +18,7 @@ describe("AlertProvider", () => {
       </AlertProvider>,
     );
 
+    await waitFor(() => {});
     getByText("Teste");
     expect(getByText("Teste")).toBeTruthy();
   });

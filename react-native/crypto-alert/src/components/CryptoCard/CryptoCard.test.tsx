@@ -30,13 +30,12 @@ jest.mock("./useCryptoCard", () => ({
 
 describe("Component: CryptoCard", () => {
   it("should render the crypto name, symbol and price", async () => {
-    const { getByText, debug, getByLabelText } = await render(
+    const { getByText, getByLabelText } = await render(
       <AlertProvider>
         <CryptoCard crypto={cryptoCurrenciesMock[0]} />
       </AlertProvider>,
     );
 
-    debug();
     const name = getByText(cryptoCurrenciesMock[0].name);
     const symbol = getByText(cryptoCurrenciesMock[0].symbol);
     const price = getByLabelText("Price");
@@ -66,12 +65,11 @@ describe("Component: CryptoCard", () => {
   });
 
   it("should render alert badge when has alerts", async () => {
-    const { debug } = await render(
+    await render(
       <AlertProvider>
         <CryptoCard crypto={cryptoCurrenciesMock[0]} />
       </AlertProvider>,
     );
-    debug();
     const alertBadge = screen.getByLabelText(
       "Toggle alerts for this cryptocurrency",
     );
@@ -125,12 +123,11 @@ describe("Component: CryptoCard", () => {
       expanded: true,
       toggleExpanded: jest.fn(),
     });
-    const { debug } = await render(
+    await render(
       <AlertProvider>
         <CryptoCard crypto={cryptoCurrenciesMock[0]} />
       </AlertProvider>,
     );
-    debug();
     const alertList = screen.getByLabelText("Alert list");
     expect(alertList).toBeTruthy();
   });

@@ -2,6 +2,10 @@ import { fireEvent, render, screen } from "@testing-library/react-native";
 import { SelectField } from "./SelectField";
 import { SelectOption } from "./useSelectField";
 
+jest.mock("@expo/vector-icons", () => ({
+  Ionicons: () => null,
+}));
+
 describe("Component: SelectField", () => {
   it("should return the current value selected", async () => {
     const options = [
