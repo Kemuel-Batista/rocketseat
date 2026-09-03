@@ -1,2 +1,9 @@
 remove-timestamps.txt
 remove-timestamps-output.txt
+
+coverage/
+.expo/
+android/
+ios/
+node_modules/
+.DS_STORE
